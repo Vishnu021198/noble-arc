@@ -1,0 +1,60 @@
+{% extends 'userapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<h1>Sign Up</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- signup form -->
+	<div class="contact-from-section mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2">
+					<div class="form-title">
+						<h2>Create an Account</h2>
+						<p>Fill in the details below to sign up.</p>
+					</div>
+					<div class="contact-form">
+						<form method="POST" id="signup-form" action="">
+							{% csrf_token %}
+							<p>
+								<input type="text" placeholder="Name" name="name" id="name" required>
+							</p>
+							<p>
+								<input type="text" placeholder="Mobile" name="mobile" id="mobile" required>
+							</p>
+							<p>
+								<input type="email" placeholder="Email" name="email" id="email" required>
+							</p>
+							<p>
+								<input type="password" placeholder="New Password" name="new_password" id="new_password" required>
+							</p>
+							<p>
+								<input type="password" placeholder="Confirm Password" name="confirm_password" id="confirm_password" required>
+							</p>
+							<p class="forgot-signup-links">
+								Already have an account? <a href="/login">Login</a>
+							</p>
+							<p><input type="submit" value="Sign Up"></p>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end signup form -->
+
+{% endblock %}

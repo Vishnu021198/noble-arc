@@ -1,0 +1,74 @@
+{% extends 'userapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<h1>Products</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- products -->
+	<div class="product-section mt-150 mb-150">
+		<div class="container">
+
+
+                <div class="row">
+					<div class="col-md-12">
+						<div class="product-filters">
+							<ul>
+								<li data-filter="*"><a href="?category=">All</a></li>
+								{% for category in categories %}
+                    				<li data-filter=".{{ category.category_name }}"><a href="?category={{ category.id }}">{{ category.category_name }}</a></li>
+                				{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+
+			<div class="row product-lists">
+				{% for product in products %}
+				<div class="col-lg-6 col-md-6 text-center berry">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="{% url 'product_detail' category_id=product.category.id product_id=product.id %}"><img src="{{ product.product_images.url }}" alt=""></a>
+						</div>
+						<h3>{{ product.product_name }}</h3>
+						<p class="product-price">
+							{% comment %} <span>Arc 200/M13</span> {% endcomment %}
+							₹{{ product.price }}</p>
+						<a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+				
+
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<div class="pagination-wrap">
+						<ul>
+							<li><a href="#">Prev</a></li>
+							<li><a class="active" href="#">1</a></li>
+							<li><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">Next</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end products -->
+
+{% endblock %}

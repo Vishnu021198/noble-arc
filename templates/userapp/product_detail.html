@@ -1,0 +1,111 @@
+{% extends 'userapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+	
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<h1>Product Details</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- single product -->
+	<div class="single-product mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-5">
+					<div class="single-product-img">
+						<img src="{{ single_product.product_images.url }}" alt="">
+					</div>
+				</div>
+				<div class="col-md-7">
+					<div class="single-product-content">
+						<h3>{{ single_product.product_name }}</h3>
+						<p class="single-product-pricing"><span>{{ single_product.category }}</span>₹{{ single_product.price }}</p>
+						<ul>
+							<li>{{ single_product.description }}</li>
+						</ul>
+						<div class="row">
+							<div class="item-option-select">
+								<h6>Select Model</h6>
+								<select class="form-control text-black" id="model" name="model" required>
+									<option  value="" disabled selected>Select Model</option>
+									<option value="M13">M13</option>
+									<option value="M14">M14</option>
+								</select>
+							</div>
+          				</div>
+						<br>
+						<div class="single-product-form">
+							{% if is_out_of_stock %}
+							<h5 class="text-danger">Out of Stock</h5>
+							{% else %}
+							<a href="" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+							<a href="" class="cart-btn"><i class="fas fa fa-bolt"></i> Buy Now</a>
+							{% endif %}
+						</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end single product -->
+	
+
+	<!-- more products -->
+	<div class="more-products mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="section-title">	
+						<h3><span class="orange-text">Related</span> Products</h3>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="/product_detail"><img src="{% static 'img/products/product-img-3.jpg' %}" alt=""></a>
+						</div>
+						<h3>FUSE</h3>
+						<p class="product-price"><span>Arc 250/Arc S Fuse</span> ₹8500 </p>
+						<a href="" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="/product_detail"><img src="{% static 'img/products/product-img-2.jpg' %}" alt=""></a>
+						</div>
+						<h3>METL</h3>
+						<p class="product-price"><span>Arc 250/M14</span> ₹6500 </p>
+						<a href="" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 offset-lg-0 offset-md-3 text-center">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a href="/product_detail"><img src="{% static 'img/products/product-img-4.jpg' %}" alt=""></a>
+						</div>
+						<h3>FUSE</h3>
+						<p class="product-price"><span>Arc 400/Arc V Fuse</span> ₹8500 </p>
+						<a href="" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end more products -->
+
+{% endblock %}

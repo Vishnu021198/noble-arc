@@ -1,0 +1,45 @@
+{% extends 'userapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+	<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<h1>OTP Verification</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- OTP verification form -->
+	<div class="contact-from-section mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2">
+					<div class="form-title">
+						<h2>Enter OTP</h2>
+						<p>Enter the OTP sent to your mobile number.</p>
+					</div>
+					<div class="contact-form">
+						<form method="POST" id="otp-form" action="{% url 'loginotp' %}">
+							{% csrf_token %}
+							<p>
+								<input type="text" placeholder="Enter OTP" name="otp" id="otp" required>
+							</p>
+							<p><input type="submit" value="Verify OTP"></p>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end OTP verification form -->
+
+{% endblock %}
