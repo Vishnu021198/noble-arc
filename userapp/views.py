@@ -75,21 +75,10 @@ def login(request):
 
     if request.method == "POST":
 
-        return redirect("/loginotp")
+        return redirect("/")
 
 
     return render(request, 'userapp/login.html')
-
-
-
-
-def loginotp(request):
-
-    if request.method == "POST":
-
-        return redirect("/")
-
-    return render(request, 'userapp/loginotp.html')
 
 
 
@@ -130,11 +119,20 @@ def signup(request):
 
     if request.method == "POST":
 
-        return redirect("/login")
+        return redirect("/signup_otp")
     
     return render(request, 'userapp/signup.html')
 
 
+
+
+def signup_otp(request):
+
+    if request.method == "POST":
+
+        return redirect("/login")
+
+    return render(request, 'userapp/signup_otp.html')
 
 
 

@@ -28,7 +28,7 @@
 						<p>Enter the OTP sent to your mobile number.</p>
 					</div>
 					<div class="contact-form">
-						<form method="POST" id="otp-form" action="{% url 'loginotp' %}">
+						<form method="POST" id="otp-form" action="{% url 'signup_otp' %}">
 							{% csrf_token %}
 							<p>
 								<input type="text" placeholder="Enter OTP" name="otp" id="otp" required>

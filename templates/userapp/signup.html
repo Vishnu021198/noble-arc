@@ -28,7 +28,7 @@
 						<p>Fill in the details below to sign up.</p>
 					</div>
 					<div class="contact-form">
-						<form method="POST" id="signup-form" action="">
+						<form method="POST" id="signup-form" action="{% url 'signup' %}">
 							{% csrf_token %}
 							<p>
 								<input type="text" placeholder="Name" name="name" id="name" required>
