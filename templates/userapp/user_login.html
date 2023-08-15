@@ -28,8 +28,7 @@
 						<p>Log in to your account to access our services.</p>
 					</div>
 					<div class="contact-form">
-						<form method="POST" id="login-form" action="{% url 'login' %}">
-							{% csrf_token %}
+						<form method="POST" id="login-form" action="{% url 'user_login' %}">{% csrf_token %}
 							<p>
 								<input type="email" placeholder="Email" name="email" id="email" required>
 							</p>

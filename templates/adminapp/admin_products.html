@@ -4,22 +4,16 @@
 
 {% block content %}
 <br>
-    <div class="container-xxl flex-grow-1 container-p-y">
-              <!-- Hoverable Table rows -->
-              <div class="card py-3 mb-4">
-                {% comment %} <div class="table-head">
-                  <h5 class="card-header">Products</h5>
-                  <a href="add-product.html" class="btn btn-primary">Add Product</a>
-                </div> {% endcomment %}
-                <div class="table-head">
-                  <h5 class="card-header" style="display: inline-block; margin-right: 900px;">Products</h5>
-                  <a href="/adminapp/add_product" class="btn btn-primary">Add Product</a>
-                </div>
-                
-                <div class="table-responsive text-nowrap">
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card py-3 mb-4">
+        <div class="table-head">
+            <h5 class="card-header" style="display: inline-block; margin-right: 900px;">Products</h5>
+            <a href="/adminapp/add_product" class="btn btn-primary">Add Product</a>
+        </div>
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Image</th>
@@ -29,86 +23,50 @@
                         <th>Quantity</th>
                         <th>Status</th>
                         <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                      <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i><strong>1</strong></td>
-                        <td>M13</td>
-                        <td>
-                          <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                            <li class="avatar avatar-xs pull-up">
-                              <img src="{% static 'adminapp/img/avatars/1.png' %}" alt="Avatar" class="rounded-circle" />
-                            </li>
-                            
-                          </ul>
-                        </td>
-                        <td>METL</td>
-                        <td>Description</td>
-                        <td>Price</td>
-                        <td>73</td>
-                        <td><span class="badge bg-label-success me-1">Available</span></td>
-                        <td>
-                          <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                              <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" href="javascript:void(0);"
-                                ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                              >
-                              <a class="dropdown-item" href="javascript:void(0);"
-                                ><i class="bx bx-trash me-1"></i> Delete</a
-                              >
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i><strong>1</strong></td>
-                        <td>M13</td>
-                        <td>
-                          <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                            <li class="avatar avatar-xs pull-up">
-                              <img src="{% static 'adminapp/img/avatars/1.png' %}" alt="Avatar" class="rounded-circle" />
-                            </li>
-                            
-                          </ul>
-                        </td>
-                        <td>METL</td>
-                        <td>Description</td>
-                        <td>Price</td>
-                        <td>73</td>
-                        <td><span class="badge bg-label-danger me-1">Unavailable</span></td>
-                        <td>
-                          <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                              <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" href="javascript:void(0);"
-                                ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                              >
-                              <a class="dropdown-item" href="javascript:void(0);"
-                                ><i class="bx bx-trash me-1"></i> Delete</a
-                              >
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <!--/ Hoverable Table rows -->
-     </div>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% regroup products by id as grouped_products %}
+                    {% for group in grouped_products|dictsort:"grouper" %}
+                        {% for product in group.list %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.product_name }}</td>
+                            <td>
+                                <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                    <li class="avatar avatar-xs pull-up">
+                                        <img src="{{ product.product_images.url }}" alt="Product Image" class="rounded-circle" />
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>{{ product.category.category_name }}</td>
+                            <td>{{ product.description|slice:":10" }}</td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.quantity }}</td>
+                            <td>
+                                {% if product.is_available %}
+                                <span class="badge bg-label-success me-1">Available</span>
+                                {% else %}
+                                <span class="badge bg-label-danger me-1">Unavailable</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
-
-
-{% comment %} <div class="btn-group">
-  <button type="button" class="btn btn-success dropdown-toggle"
-    data-bs-toggle="dropdown"aria-expanded="false">Available</button>
-  <ul class="dropdown-menu">
-    <li><a class="dropdown-item btn btn-danger dropdown-toggle" href="javascript:void(0);">Unavailable</a></li>
-  </ul>
-</div> {% endcomment %}
