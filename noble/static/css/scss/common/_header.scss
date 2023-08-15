@@ -1,8 +1,5 @@
-/* -----------------------------------------------------------------------------
+/* Header Styles */
 
-# Header Styles
-
------------------------------------------------------------------------------ */
 ul.navbar-nav li.nav-item {
   a.nav-link, &.active a.nav-link {
     color: $text-color;
@@ -28,10 +25,6 @@ ul.navbar-nav li.nav-item {
     font-weight: 700;
     margin-right: 14px;
   }
-}
-
-a.navbar-brand img {
-  max-width: 150px;
 }
 
 nav.main-menu {
@@ -222,7 +215,7 @@ nav.main-menu {
   }
 }
 
-.top-header-area {
+top-header-area {
   transition: 0.3s;
 }
 
@@ -309,16 +302,10 @@ a.mobile-show {
   }
 }
 
-.search-area {
-  visibility: hidden;
-  opacity: 0;
-  transition: 0.3s;
-
-  &.search-active {
-    visibility: visible;
-    opacity: 1;
-    z-index: 999;
-  }
+.mobile-hide.search-bar-icon {
+  display: inline-block;
+  padding: 10px;
+  color: $white-color;
 }
 
 .search-bar-tablecell h3 {
@@ -327,4 +314,59 @@ a.mobile-show {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 7px;
+}
+
+.header-icons {
+  position: relative;
+
+  ul.sub-menu {
+    position: absolute;
+    background-color: $white-color;
+    width: 220px;
+    padding: 15px 15px;
+    margin: 0;
+    left: 0;
+    top: 50px;
+    border-radius: 3px;
+    transition: 0.3s;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: 0 0 20px #555555;
+
+    li {
+      a {
+        color: #555;
+        font-weight: 600;
+        padding: 7px 10px;
+        font-size: 13px;
+      }
+
+      display: block;
+      text-align: left;
+    }
+  }
+
+  /* Display the dropdown when hovering on the user icon */
+  &:hover > a.shopping-cart i,
+  &:hover > a.mobile-hide.search-bar-icon i {
+    color: $primary-color; 
+  }
+
+  &:hover ul.sub-menu {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.header-icons a.shopping-cart i,
+.header-icons a.mobile-hide.search-bar-icon i {
+  color: $white-color;
+  display: inline-block;
+  padding: 10px;
+}
+
+/* Change color on hover */
+.header-icons a.shopping-cart i:hover,
+.header-icons a.mobile-hide.search-bar-icon i:hover {
+  color: $primary-color;
 }

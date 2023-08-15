@@ -38,11 +38,27 @@
 								<li><a href="/contact">Contact</a></li>
 								<li>
 									<div class="header-icons">
-										<a class="mobile-hide search-bar-icon" href="{% url 'user_login' %}"><i class="fas fa-user"></i></a>
-										<a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+										{% if user.is_authenticated %}
+											<a class="shopping-cart">
+												<i class="fas fa-user"></i>
+											</a>
+											<ul class="sub-menu">
+												<li><a href="{% url 'user_profile' %}">User Profile</a></li>
+												<li><a href="{% url 'user_logout' %}">Logout</a></li>
+											</ul>
+										{% else %}
+											<a class="shopping-cart" href="{% url 'user_login' %}">
+												<i class="fas fa-user"></i>
+											</a>
+										{% endif %}
+										<a class="shopping-cart" href="/cart">
+											<i class="fas fa-shopping-cart"></i>
+										</a>
+										<a class="mobile-hide search-bar-icon" href="#">
+											<i class="fas fa-search"></i>
+										</a>
 									</div>
-								</li>
+								</li>	
 							</ul>
 						</nav>
 						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>

@@ -1,17 +1,20 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponse
 from .models import Product,Category,User
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
-from twilio.rest import Client
-import random
-from django.contrib.sessions.models import Session
-import os
 from . import verify
+from django.contrib.auth.decorators import login_required
+
+
 # Create your views here.
 
 
 
 def index(request):
+
+    response = HttpResponse()
+    response['Cache-Control'] = 'no-store'
 
     categories = Category.objects.all()
 
@@ -87,7 +90,7 @@ def user_login(request):
         user = authenticate(request,email= email,password=password)
         if user is not None:
            login(request,user)
-           return redirect("/contact")
+           return redirect("/")
         else:
             messages.error(request,"Email or password is incorect")
 
@@ -194,8 +197,16 @@ def signup_otp(request):
     return render(request, "userapp/signup_otp.html")
 
 
+@login_required
+def user_profile(request):
+
+    return render(request, 'userapp/user_profile.html')
 
 
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect('/')
 
 
 
