@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from userapp.models import Product, Category, User
-from django.views.decorators.cache import cache_control
+from django.views.decorators.cache import cache_control, never_cache
 
 
 
@@ -34,7 +34,7 @@ def index(request):
 
 
 
-
+@never_cache
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('index')
@@ -43,7 +43,7 @@ def dashboard(request):
 
 
 
-
+@never_cache
 def admin_logout(request):
     if request.user.is_authenticated:
         logout(request)
