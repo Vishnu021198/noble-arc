@@ -33,31 +33,41 @@
                             <td>{{ product.id }}</td>
                             <td>{{ product.product_name }}</td>
                             <td>
-                                <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                    <li class="avatar avatar-xs pull-up">
-                                        <img src="{{ product.product_images.url }}" alt="Product Image" class="rounded-circle" />
-                                    </li>
-                                </ul>
+                                {% if product.product_images %}
+                                    <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                        <li class="avatar avatar-xs pull-up">
+                                            <img src="{{ product.product_images.url }}" alt="Product Image" class="rounded-circle" />
+                                        </li>
+                                    </ul>
+                                {% else %}
+                                    No image available
+                                {% endif %}
                             </td>
+                            
                             <td>{{ product.category.category_name }}</td>
-                            <td>{{ product.description|slice:":10" }}</td>
+                            <td>{{ product.description|slice:":10" }}...</td>
                             <td>{{ product.price }}</td>
                             <td>{{ product.quantity }}</td>
                             <td>
-                                {% if product.is_available %}
-                                <span class="badge bg-label-success me-1">Available</span>
+                                {% if product.quantity > 0 %}
+                                    <span class="badge bg-label-success me-1">Available</span>
                                 {% else %}
-                                <span class="badge bg-label-danger me-1">Unavailable</span>
+                                    <span class="badge bg-label-danger me-1">Unavailable</span>
                                 {% endif %}
-                            </td>
+                            </td>                            
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
+                                        <a class="dropdown-item" href="{% url 'edit_product' product.id %}"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                        {% if not product.soft_deleted %}
+                                            <a class="dropdown-item" href="{% url 'soft_delete_product' product.id %}"><i class="bx bx-trash me-1"></i> Delete</a>
+                                        {% endif %}
+                                        {% if product.soft_deleted %}
+                                            <a class="dropdown-item" href="{% url 'undo_soft_delete_product' product.id %}"><i class="bx bx-undo me-1"></i> Undo</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </td>

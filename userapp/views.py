@@ -151,9 +151,11 @@ def signup(request):
         if User.objects.filter(email=email).exists():
             messages.info(request, "Email is taken")
             return redirect('/signup')
-        otp = verify.generate_otp()
+        otp = verify.generate_otp() 
         print("Generated OTP:", otp)
         verify.send_otp(mobile, otp)
+        send_otp=verify.send_otp(mobile, otp)
+        print("send OTP:", send_otp)
         
         request.session["signup_user_data"] = {
             "name": name,

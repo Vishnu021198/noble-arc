@@ -13,23 +13,19 @@
             <h5 class="mb-0">Add Category</h5>
           </div>
           <div class="card-body">
-            <form>
+            <form method="POST" enctype="multipart/form-data" action="{% url 'add_category' %}">
+              {% csrf_token %}
               <div class="mb-3">
-                <label class="form-label" for="basic-default-fullname">Category ID</label>
-                <input type="text" class="form-control" id="basic-default-fullname" placeholder="" />
-              </div>
-              <div class="mb-3">
-                <label class="form-label" for="basic-default-company">Category Name</label>
-                <input type="text" class="form-control" id="basic-default-company" placeholder="" />
+                  <label class="form-label" for="category_name">Category Name</label>
+                  <input type="text" class="form-control" id="category_name" name="category_name" placeholder="" />
               </div>
               <div class="input-group">
-                <label class="form-label" for="basic-default-company">Upload Image</label> &nbsp; &nbsp;
-                <input type="file" class="form-control" id="inputGroupFile02" />
-                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                  <label class="form-label">Upload Image</label>
+                  <input type="file" class="form-control" id="category_image" name="category_image" />
               </div>
               <br>
-              <a href="/adminapp/admin_category" class="btn btn-primary">Add Category</a>
-            </form>
+              <button type="submit" class="btn btn-primary">Add Category</button>
+          </form>          
           </div>
         </div>
     </div>

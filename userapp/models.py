@@ -87,6 +87,7 @@ class Product(models.Model):
     price = models.IntegerField()
     quantity = models.IntegerField()
     is_available = models.BooleanField(default=True)
+    soft_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.product_name
