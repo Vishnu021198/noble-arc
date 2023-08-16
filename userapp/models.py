@@ -17,12 +17,12 @@ class User_manager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-
-    def create_superuser(self, name, email, password):
+    def create_superuser(self, name, email, mobile, password):
         user = self.create_user(
             email = self.normalize_email(email),
             password = password,
             name = name,
+            mobile = mobile
         )
 
         user.is_admin = True
@@ -31,6 +31,7 @@ class User_manager(BaseUserManager):
         user.is_superadmin = True
         user.save(using=self._db)
         return user
+
     
 
 
@@ -47,7 +48,7 @@ class User(AbstractBaseUser):
     is_superadmin = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['name','mobile']
 
     objects = User_manager()
 
