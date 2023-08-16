@@ -47,7 +47,11 @@
 						<p class="product-price">
 							{% comment %} <span>Arc 200/M13</span> {% endcomment %}
 							₹{{ product.price }}</p>
-						<a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+						{% if user.is_authenticated %}
+							<a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+						{% else %}
+							<a href="{% url 'user_login' %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+						{% endif %}
 					</div>
 				</div>
 				{% endfor %}

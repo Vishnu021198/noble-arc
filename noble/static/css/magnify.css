@@ -1,0 +1,14 @@
+/* magnify.css */
+
+.magnify {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+}
+
+.magnify img {
+    display: block;
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+}

@@ -51,9 +51,15 @@
 												<i class="fas fa-user"></i>
 											</a>
 										{% endif %}
-										<a class="shopping-cart" href="/cart">
-											<i class="fas fa-shopping-cart"></i>
-										</a>
+										{% if user.is_authenticated %}
+											<a class="shopping-cart" href="/cart">
+												<i class="fas fa-shopping-cart"></i>
+											</a>
+										{% else %}
+											<a class="shopping-cart" href="{% url 'user_login' %}">
+												<i class="fas fa-shopping-cart"></i>
+											</a>
+										{% endif %}
 										<a class="mobile-hide search-bar-icon" href="#">
 											<i class="fas fa-search"></i>
 										</a>
