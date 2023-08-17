@@ -5,6 +5,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from . import verify
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+
 
 
 # Create your views here.
@@ -81,18 +84,18 @@ def contact(request):
 
 
 def user_login(request):
-
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('index')
+
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
-        user = authenticate(request,email= email,password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
-           login(request,user)
-           return redirect("/")
+            login(request, user)
+            return redirect('index')
         else:
-            messages.error(request,"Email or password is incorect")
+            messages.error(request, "Email or password is incorrect")
 
     return render(request, 'userapp/user_login.html')
 
@@ -132,31 +135,34 @@ def reset_password(request):
 
 def signup(request):
     if request.method == "POST":
-        # Extract user input from the form
         name = request.POST.get("name")
         email = request.POST.get("email")
         mobile = request.POST.get("mobile")
         password = request.POST.get("new_password")
         confirm_password = request.POST.get("confirm_password")
 
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.warning(request, "Invalid email address")
+            return redirect('/signup')
 
         if password != confirm_password:
             messages.warning(request, "Passwords do not match")
             return redirect('/signup')
 
         if User.objects.filter(name=name).exists():
-            messages.info(request, "Username is taken")
+            messages.warning(request, "Username is already taken")
             return redirect('/signup')
 
         if User.objects.filter(email=email).exists():
-            messages.info(request, "Email is taken")
+            messages.warning(request, "Email is already t   aken")
             return redirect('/signup')
-        otp = verify.generate_otp() 
+
+        otp = verify.generate_otp()
         print("Generated OTP:", otp)
         verify.send_otp(mobile, otp)
-        send_otp=verify.send_otp(mobile, otp)
-        print("send OTP:", send_otp)
-        
+
         request.session["signup_user_data"] = {
             "name": name,
             "email": email,
@@ -166,10 +172,9 @@ def signup(request):
         }
 
         return redirect("signup_otp")
-    
-    
-         
-    return render(request,'userapp/signup.html')
+
+    return render(request, 'userapp/signup.html')
+
 
 
 

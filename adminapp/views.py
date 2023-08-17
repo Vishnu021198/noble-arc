@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from userapp.models import Product, Category, User, ProductImage
 from django.views.decorators.cache import cache_control, never_cache
 from django.contrib.auth.decorators import login_required
-
+from django.http import HttpResponseForbidden
 
 
 
@@ -59,9 +59,13 @@ def admin_logout(request):
 
 @login_required
 def admin_products(request):
-    products = Product.objects.select_related('category').all().order_by('id')
-    context = {'products': products}
-    return render(request, 'adminapp/admin_products.html', context)
+    if request.user.is_superadmin:
+        products = Product.objects.select_related('category').all().order_by('id')
+        context = {'products': products}
+        return render(request, 'adminapp/admin_products.html', context)
+    else:
+        return HttpResponseForbidden("You don't have permission to access this page.")
+
 
 
 
