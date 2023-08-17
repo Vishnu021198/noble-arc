@@ -24,7 +24,7 @@
                   <label class="form-label" for="product_images">Upload Image</label>
                   <input type="file" class="form-control" id="product_images" name="product_images" accept="image/*">
                   {% if product.product_images %}
-                    <img src="{{ product.product_images.url }}" alt="Product Image" class="img-fluid">
+                    <img src="{{ product.product_images.url }}" alt="Product Image" class="img-fluid" style="width:100px">
                   {% endif %}
               </div>
               <div class="mb-3">

@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from userapp.models import Product, Category, User
+from userapp.models import Product, Category, User, ProductImage
 from django.views.decorators.cache import cache_control, never_cache
 from django.contrib.auth.decorators import login_required
 
@@ -70,7 +70,7 @@ def admin_products(request):
 def add_product(request):
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
-        product_images = request.FILES.get('product_images')
+        product_images = request.FILES.getlist('product_images') 
         category_id = request.POST.get('category')
         description = request.POST.get('description')
         price = request.POST.get('price')
@@ -80,7 +80,6 @@ def add_product(request):
         
         product = Product(
             product_name=product_name,
-            product_images=product_images,
             category=category,
             description=description,
             price=price,
@@ -89,11 +88,15 @@ def add_product(request):
         )
         product.save()
         
+        for image in product_images:
+            ProductImage.objects.create(product=product, image=image)
+        
         return redirect('admin_products')
     
     categories = Category.objects.all().order_by('id')
     context = {'categories': categories}
     return render(request, 'adminapp/add_product.html', context)
+
 
 
 
@@ -107,7 +110,6 @@ def edit_product(request, product_id):
 
     if request.method == 'POST':
         product.product_name = request.POST.get('product_name')
-        product_images = request.FILES.get('product_images')
         category_id = request.POST.get('category')
         description = request.POST.get('description')
         price = request.POST.get('price')
@@ -115,12 +117,18 @@ def edit_product(request, product_id):
 
         category = Category.objects.get(pk=category_id)
 
-        product.product_images = product_images
         product.category = category
         product.description = description
         product.price = price
         product.quantity = quantity
         product.save()
+
+        images = request.FILES.getlist('product_images')
+        if images:
+            product.images.all().delete()
+
+            for image in images:
+                ProductImage.objects.create(product=product, image=image)
 
         return redirect('admin_products')
 
@@ -129,6 +137,7 @@ def edit_product(request, product_id):
         'categories': categories,
     }
     return render(request, 'adminapp/edit_product.html', context)
+
 
 
 
