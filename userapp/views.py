@@ -85,7 +85,7 @@ def contact(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('index')
+        return redirect('/')
 
     if request.method == 'POST':
         email = request.POST['email']
@@ -93,7 +93,7 @@ def user_login(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')
+            return redirect('/')
         else:
             messages.error(request, "Email or password is incorrect")
 

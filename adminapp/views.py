@@ -10,7 +10,7 @@ from django.http import HttpResponseForbidden
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
-    if request.user.is_authenticated:
+    if request.user.is_superadmin:
         return redirect('dashboard')
     
     if request.method == 'POST':
@@ -38,11 +38,14 @@ def index(request):
 @never_cache
 @login_required
 def dashboard(request):
-    if not request.user.is_authenticated:
-        return redirect('index')
-    
-    context = {'admin_name': request.user.name}
-    return render(request, 'adminapp/dashboard.html', context)
+    if request.user.is_superadmin:
+        if not request.user.is_superadmin:
+            return redirect('index')
+        
+        context = {'admin_name': request.user.name}
+        return render(request, 'adminapp/dashboard.html', context)
+    else:
+        return HttpResponseForbidden("You don't have permission to access this page.")
 
 
 
@@ -79,6 +82,25 @@ def add_product(request):
         description = request.POST.get('description')
         price = request.POST.get('price')
         quantity = request.POST.get('quantity')
+
+
+        if not (product_name and category_id and price and quantity):
+            messages.error(request, "Please provide all required fields.")
+            return redirect('add_product')
+        
+
+        try:
+            price = float(price)
+            quantity = int(quantity)
+            if price <= 0 or quantity <= 0:
+                raise ValueError
+        except ValueError:
+            messages.error(request, "Price and quantity must be positive numbers.")
+            return redirect('add_product')
+        
+        if Product.objects.filter(product_name=product_name).exists():
+            messages.error(request, f"A product with the name '{product_name}' already exists.")
+            return redirect('add_product')
         
         category = Category.objects.get(pk=category_id)
         
@@ -118,6 +140,23 @@ def edit_product(request, product_id):
         description = request.POST.get('description')
         price = request.POST.get('price')
         quantity = request.POST.get('quantity')
+
+        if not (product.product_name and category_id and price and quantity):
+            messages.error(request, "Please provide all required fields.")
+            return redirect('edit_product', product_id=product_id)
+
+        try:
+            price = float(price)
+            quantity = int(quantity)
+            if price <= 0 or quantity <= 0:
+                raise ValueError
+        except ValueError:
+            messages.error(request, "Price and quantity must be positive numbers.")
+            return redirect('edit_product', product_id=product_id)
+
+        if Product.objects.filter(product_name=product.product_name).exclude(pk=product_id).exists():
+            messages.error(request, f"A product with the name '{product.product_name}' already exists.")
+            return redirect('edit_product', product_id=product_id)
 
         category = Category.objects.get(pk=category_id)
 
@@ -186,6 +225,14 @@ def add_category(request):
         category_name = request.POST.get('category_name')
         category_image = request.FILES.get('category_image')
 
+        if not category_name:
+            messages.error(request, "Please provide a category name.")
+            return redirect('add_category')
+
+        if Category.objects.filter(category_name=category_name).exists():
+            messages.error(request, f"A category with the name '{category_name}' already exists.")
+            return redirect('add_category')
+
         category = Category(
             category_name=category_name,
             category_images=category_image
@@ -206,6 +253,14 @@ def edit_category(request, category_id):
     if request.method == 'POST':
         category_name = request.POST.get('category_name')
         category_image = request.FILES.get('category_image')
+
+        if not category_name:
+            messages.error(request, "Please provide a category name.")
+            return redirect('edit_category', category_id=category_id)
+
+        if Category.objects.filter(category_name=category_name).exclude(pk=category_id).exists():
+            messages.error(request, f"A category with the name '{category_name}' already exists.")
+            return redirect('edit_category', category_id=category_id)
 
         category.category_name = category_name
         if category_image:
