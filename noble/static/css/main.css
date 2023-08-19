@@ -1313,17 +1313,6 @@ ul.product-share li:hover a {
   color: #ffe200;
 }
 
-.single-product-item {
-  -webkit-transition: 0.3s;
-  -o-transition: 0.3s;
-  transition: 0.3s;
-}
-
-.single-product-item:hover {
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-
 .search-bar-tablecell button[type=submit] {
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
@@ -2401,13 +2390,32 @@ ul.social-link-team li a {
   color: #fff;
 }
 
-.single-product-item {
-  margin-bottom: 30px;
+.single-product-item .product-image {
+  position: relative;
+  overflow: hidden;
+}
+.single-product-item .product-image::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Overlay color */
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-.product-image {
-  padding: 30px;
-  padding-bottom: 0;
+.single-product-item:hover .product-image::before {
+  opacity: 1; /* Show the overlay on hover */
+}
+
+.single-product-item .product-image img {
+  transition: transform 0.3s;
+}
+
+.single-product-item:hover .product-image img {
+  transform: scale(1.1); /* Slightly scale the image on hover */
 }
 
 .product-image img {
@@ -2717,10 +2725,21 @@ table.order-details tbody td {
 }
 
 .single-product-item {
+  position: relative;
   -webkit-box-shadow: 0 0 20px #e4e4e4;
   box-shadow: 0 0 20px #e4e4e4;
   padding-bottom: 50px;
   border-radius: 5px;
+  overflow: hidden; 
+  transition: transform 0.3s, box-shadow 0.3s, z-index 0.3s; 
+  margin-bottom: 30px;
+}
+
+.single-product-item:hover {
+  transform: translateY(-5px); 
+  -webkit-box-shadow: 0 0 30px #ddd;
+  box-shadow: 0 0 30px #ddd;
+  z-index: 1; 
 }
 
 /* -----------------------------------------------------------------------------
