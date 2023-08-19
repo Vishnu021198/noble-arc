@@ -10,7 +10,7 @@ from django.http import HttpResponseForbidden
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
-    if request.user.is_superadmin:
+    if request.user.is_authenticated:
         return redirect('dashboard')
     
     if request.method == 'POST':
