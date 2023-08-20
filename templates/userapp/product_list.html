@@ -53,10 +53,23 @@
 							<h3>{{ product.product_name }}</h3>
 							<p class="product-price">
 								₹{{ product.price }}</p>
-							{% if user.is_authenticated %}
-								<a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+								{% if not product.category.soft_deleted %}
+								{% if user.is_authenticated %}
+									{% if is_out_of_stock %}
+										<h5 class="text-danger">Out of Stock</h5>
+									{% else %}
+										<a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+									{% endif %}
+								{% else %}
+									{% if is_out_of_stock %}
+										<h5 class="text-danger">Out of Stock</h5>
+									{% else %}
+										<a href="{% url 'user_login' %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+									{% endif %}
+								{% endif %}
 							{% else %}
-								<a href="{% url 'user_login' %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+								<br>
+								<h5 class="text-danger">Out of Stock</h5>
 							{% endif %}
 						</div>
 					</div>

@@ -274,15 +274,28 @@ def edit_category(request, category_id):
 
 
 
-
 @login_required
-def delete_category(request, category_id):
+def soft_delete_category(request, category_id):
     try:
         category = Category.objects.get(pk=category_id)
-        category.delete()
     except Category.DoesNotExist:
-        pass
+        return redirect('admin_category')
+    category.soft_deleted = True
+    category.is_available = False
+    category.save()
     return redirect('admin_category')
+
+@login_required
+def undo_soft_delete_category(request, category_id):
+    try:
+        category = Category.objects.get(pk=category_id)
+    except Category.DoesNotExist:
+        return redirect('admin_category')
+    category.soft_deleted = False
+    category.is_available = True
+    category.save()
+    return redirect('admin_category')
+
 
 
 

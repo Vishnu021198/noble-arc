@@ -49,22 +49,26 @@
           				</div>
 						<br>
 						<div class="single-product-form">
-							{% if user.is_authenticated %}
-								{% if is_out_of_stock %}
+							{% if single_product.category.soft_deleted %}
 								<h5 class="text-danger">Out of Stock</h5>
-								{% else %}
-								<a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-								<a href="/cart" class="cart-btn"><i class="fas fa fa-bolt"></i> Buy Now</a>
-								{% endif %}
 							{% else %}
-								{% if is_out_of_stock %}
-								<h5 class="text-danger">Out of Stock</h5>
+								{% if user.is_authenticated %}
+									{% if is_out_of_stock %}
+										<h5 class="text-danger">Out of Stock</h5>
+									{% else %}
+										<a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+										<a href="/cart" class="cart-btn"><i class="fas fa fa-bolt"></i> Buy Now</a>
+									{% endif %}
 								{% else %}
-								<a href="{% url 'user_login' %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-								<a href="{% url 'user_login' %}" class="cart-btn"><i class="fas fa fa-bolt"></i> Buy Now</a>
+									{% if is_out_of_stock %}
+										<h5 class="text-danger">Out of Stock</h5>
+									{% else %}
+										<a href="{% url 'user_login' %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+										<a href="{% url 'user_login' %}" class="cart-btn"><i class="fas fa fa-bolt"></i> Buy Now</a>
+									{% endif %}
 								{% endif %}
 							{% endif %}
-						</div>						
+						</div>
 					</div>
 				</div>
 			</div>

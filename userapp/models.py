@@ -68,14 +68,16 @@ class User(AbstractBaseUser):
 class Category(models.Model):
     category_name = models.CharField(max_length=50, unique=True)
     category_images = models.ImageField(upload_to='photos/categories', blank=True)
+    is_available = models.BooleanField(default=True)
+    soft_deleted = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
-
     def __str__(self):
         return self.category_name
+
     
 
 
@@ -95,7 +97,8 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to='photos/product')
+    image = models.ImageField(upload_to='photos/product', default='default_image.jpg')
 
     def __str__(self):
         return f"Image of {self.product.product_name}"
+
