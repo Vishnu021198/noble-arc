@@ -58,18 +58,20 @@ def product_list(request):
 
 
 
-def product_detail(request, category_id, product_id):
+def product_detail(request, category_id, product_id, selected_image=None):
     categories = Category.objects.all()
 
     try:
         selected_category = Category.objects.get(id=category_id)
         single_product = Product.objects.get(category=selected_category, id=product_id, is_available=True)
+        product_images = single_product.images.all()
     except Exception as e:
         raise e
     
     context = {
         'single_product': single_product,
         'is_out_of_stock': single_product.quantity <= 0,
+        'product_images': product_images,   
     }
     return render(request, 'userapp/product_detail.html', context)
 
