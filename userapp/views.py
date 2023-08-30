@@ -219,10 +219,4 @@ def user_logout(request):
 
 
 
-@login_required
-def cart(request):
-    response = HttpResponse()
-    response['Cache-Control'] = 'no-store'
-    
-    return render(request, 'userapp/cart.html')
 

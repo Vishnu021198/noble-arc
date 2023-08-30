@@ -2136,6 +2136,8 @@ a.video-play-btn {
   display: inline-block;
 }
 
+
+
 /* -----------------------------------------------------------------------------
 
 # About Page Styles
@@ -2490,7 +2492,7 @@ p.single-product-pricing span {
 }
 
 input[type="number"] {
-  border: 1px solid #ddd;
+  border: 1px solid #000000;
   border-radius: 5px;
   padding: 10px;
   width: 100px;
@@ -2528,20 +2530,57 @@ ul.product-share li a {
 }
 
 table.cart-table {
-  border: 1px solid #f9f9f9;
+  border: 2px solid #000000;
   width: 100%;
 }
 
 thead {
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #000000;
 }
 
 tr.table-head-row th {
-  border-right: 1px solid #efefef;
+  border-right: 2px solid #000000;
   padding: 15px;
   font-weight: 500;
   text-align: center;
 }
+
+
+td.product-quantity {
+  display: flex;
+  align-items: center;
+  border: none;
+}
+
+td.product-quantity a {
+  background-color: #F28123; 
+  color: #ffffff;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  
+}
+
+td.product-quantity a:hover{
+  background-color: #7d4010; 
+}
+
+td.product-quantity input[type="text"] {
+  width: 40px; 
+  height: 30px; 
+  text-align: center;
+  font-size: 14px; 
+  border: 1px solid #050505;
+  border-radius: 5px;
+  margin: 0 5px;
+}
+
 
 tr.table-head-row th:last-child {
   border-right: none;
@@ -2559,7 +2598,7 @@ td.product-image img {
 }
 
 .cart-table-wrap tbody tr td {
-  border: 1px solid #efefef;
+  border: 2px solid #000000;
   padding: 20px 0;
   color: #051922;
 }
@@ -2568,12 +2607,9 @@ thead.cart-table-head tr {
   background-color: #efefef;
 }
 
-td.product-quantity input {
-  margin-bottom: 0;
-}
 
 td.product-remove a {
-  color: #051922;
+  color: #ff0000;
 }
 
 .total-section table.total-table {
