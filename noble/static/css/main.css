@@ -1676,7 +1676,7 @@ p.excerpt {
 }
 
 .pagination-wrap ul li a {
-  color: #6f6f6f;
+  color: #000000;
   font-size: 15px;
   background-color: #f3f3f3;
   display: inline-block;
@@ -2778,6 +2778,41 @@ table.order-details tbody td {
   z-index: 1; 
 }
 
+.empty-cart-message {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 300px;
+  color: #555;
+}
+
+.empty-cart-message a {
+  display: block;
+  margin-top: 50px;
+  margin-bottom: 200px;
+  font-size: 20px;
+  color: #F28123;
+  text-decoration: none;
+}
+
+.empty-cart-message a:hover {
+  text-decoration: underline;
+}
+
+/* Style for continue shopping link */
+.continue-shopping-link {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 30px;
+
+  color: #F28123;
+  text-decoration: none;
+}
+
+.continue-shopping-link:hover {
+  text-decoration: underline;
+}
 /* -----------------------------------------------------------------------------
 
 # 404 Page Styles

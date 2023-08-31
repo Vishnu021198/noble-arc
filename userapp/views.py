@@ -7,6 +7,7 @@ from . import verify
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
 
@@ -44,12 +45,19 @@ def product_list(request):
     if selected_category_id:
         selected_category = Category.objects.get(id=selected_category_id)
         products = Product.objects.filter(category=selected_category, is_available=True)
+        paginator = Paginator(products, 3)
+        page = request.GET.get('page')
+        paged_products = paginator.get_page(page)
     else:
         products = Product.objects.filter(is_available=True)
+        paginator = Paginator(products, 3)
+        page = request.GET.get('page')
+        paged_products = paginator.get_page(page)
+
 
     context = {
         'categories': categories,
-        'products': products,
+        'products': paged_products,
     }
 
     return render(request, 'userapp/product_list.html', context)
