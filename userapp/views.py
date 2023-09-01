@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
 
 
 
@@ -220,11 +221,23 @@ def user_profile(request):
     return render(request, 'userapp/user_profile.html')
 
 
+def search(request):
+    products = []
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
+        if keyword:
+            products = Product.objects.order_by('product_name').filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
+
+    context = {
+        'products': products,
+    }
+    return render(request, 'userapp/product_list.html', context)
+
+
+
+
+
 @login_required
 def user_logout(request):
     logout(request)
     return redirect('/')
-
-
-
-

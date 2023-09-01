@@ -15,5 +15,5 @@ urlpatterns = [
     path('signup_otp/', views.signup_otp, name='signup_otp'),
     path('user_profile/', views.user_profile, name='user_profile'),
     path('user_logout/', views.user_logout, name='user_logout'),
-    
+    path('search/', views.search, name='search'),
 ]
