@@ -415,6 +415,7 @@ a.boxed-btn {
   background-color: #F28123;
   color: #fff;
   padding: 10px 20px;
+  
 }
 
 a.bordered-btn {
@@ -442,6 +443,21 @@ a.read-more-btn:hover {
 a.boxed-btn, a.bordered-btn, a.cart-btn {
   border-radius: 50px;
 }
+
+
+button.boxered-btn {
+  font-family: 'Poppins', sans-serif;
+  display: inline-block;
+  background-color: #F28123;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin-top: 40px;
+  border-color: None;
+
+
+}
+
 
 .section-title h3 {
   font-size: 40px;
@@ -1012,7 +1028,18 @@ a.boxed-btn {
   transition: 0.3s;
 }
 
+button.boxered-btn {
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
 a.boxed-btn:hover {
+  background-color: #051922;
+  color: #F28123;
+}
+
+button.boxered-btn:hover {
   background-color: #051922;
   color: #F28123;
 }

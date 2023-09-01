@@ -1,0 +1,140 @@
+{% extends 'userapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    <!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<h1>Check Out</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+	<!-- check out section -->
+	<div class="checkout-section mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="checkout-accordion-wrap">
+						<div class="accordion" id="accordionExample">
+						  <div class="card single-accordion">
+						    <div class="card-header" id="headingOne">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						          Billing Address
+						        </button>
+						      </h5>
+						    </div>
+
+						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+						      <div class="card-body">
+						        <div class="billing-address-form">
+						        	<form action="" method="POST">{% csrf_token %}
+						        		<p><input type="text" placeholder="First Name" required></p>
+										<p><input type="text" placeholder="Last Name"></p>
+						        		<p><input type="email" placeholder="Email" required></p>
+						        		<p><input type="tel" placeholder="Phone" required></p>
+                                        <p><input type="text" placeholder="Address Line 1" required></p>
+										<p><input type="text" placeholder="Address Line 2"></p>
+										<p><input type="text" placeholder="City" required></p>
+										<p><input type="text" placeholder="Pincode" required></p>
+						        		<p><textarea name="bill" id="bill" cols="30" rows="10" placeholder="Say Something"></textarea></p>
+						        	
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="card single-accordion">
+						    <div class="card-header" id="headingTwo">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						          Shipping Address
+						        </button>
+						      </h5>
+						    </div>
+						    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+						      <div class="card-body">
+						        <div class="shipping-address-form">
+						        	<p>Your shipping address form is here.</p>
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="card single-accordion">
+						    <div class="card-header" id="headingThree">
+						      <h5 class="mb-0">
+						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+						          Card Details
+						        </button>
+						      </h5>
+						    </div>
+						    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+						      <div class="card-body">
+						        <div class="card-details">
+						        	<p>Your card details goes here.</p>
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-6">
+					<div class="order-details-wrap">
+                        <table class="order-details">
+                            <thead>
+                                <tr>
+                                    <th>Products</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="order-details-body">
+                                {% for cart_item in cart_items %}
+                                    <tr>
+                                        <td class="product-image"><a href=""><img src="{{ cart_item.product.product_images.url }}" alt="">{{ cart_item.product.product_name }}</a></td>
+                                        <td>{{ cart_item.quantity }}</td>
+                                        <td>₹{{ cart_item.product.price }}</td>
+                                        <td>₹{{ cart_item.sub_total }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tbody class="checkout-details">
+                                <tr>
+                                    <td colspan="3">Subtotal</td>
+                                    <td>₹{{ total }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">GST</td>
+                                    <td>₹{{ tax }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Shipping</td>
+                                    <td>₹{{ shipping }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Grand Total</td>
+                                    <td>₹{{ grand_total }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button type="submit" name="submit" class="boxered-btn">Check Out</button>
+                    </div>
+				</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end check out section -->
+
+{% endblock %}
