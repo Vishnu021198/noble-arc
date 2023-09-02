@@ -11,6 +11,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from cartapp.models import Cart, CartItem
 from cartapp.views import _cart_id
+import requests
 
 
 # Create your views here.
@@ -116,7 +117,16 @@ def user_login(request):
             except:
                 pass
             login(request, user)
-            return redirect('/')
+            url = request.META.get('HTTP_REFERER')
+            try:
+                query = requests.utils.urlparse(url).query
+                params = dict(x.split('=') for x in query.split('&'))
+                if 'next' in params:
+                    nextPage = params['next']
+                    return redirect(nextPage)
+            except:
+                return redirect('/')
+            
         else:
             messages.error(request, "Email or password is incorrect")
 
