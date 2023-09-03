@@ -50,9 +50,10 @@
 												<td class="product-name"><a href="{% url 'product_detail' cart_item.product.category.id cart_item.product.id %}">{{ cart_item.product.product_name }}</a></td>
 												<td class="product-price">₹{{ cart_item.product.price }}</td>
 												<td class="product-quantity">
-													<a href="{% url 'remove_cart' cart_item.product.id %}">-</a>
-													<input type="text" value="{{ cart_item.quantity }}" readonly>
-													<a href="{% url 'add_cart' cart_item.product.id %}">+</a>
+													<a href="{% url 'remove_cart' cart_item.product.id %}" class= "btn btn-light" type="button" id="button-minus"><i class="fa fa-minus"></i></a>
+													<input type="text" value="{{ cart_item.quantity }}" name="name" id="name" style="border: thin solid transparent; text-align: center;" readonly>
+													<a href="{% url 'add_cart' cart_item.product.id %}" class= "btn btn-light" type="button" id="button-plus"><i class="fa fa-plus"></i></a>
+												</div>
 												</td>
 												<td class="product-total">₹{{ cart_item.sub_total }}</td>
 											</tr>

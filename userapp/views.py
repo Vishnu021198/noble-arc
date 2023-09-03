@@ -242,6 +242,11 @@ def user_profile(request):
 
     return render(request, 'userapp/user_profile.html')
 
+def add_address(request):
+    
+    return render(request, 'userapp/add_address.html')
+
+
 
 def search(request):
     products = []
