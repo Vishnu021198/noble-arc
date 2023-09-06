@@ -36,21 +36,43 @@
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
         <div class="card-body">
           <div class="billing-address-form">
-            <form action="index.html">
-              <p><input type="text" placeholder="First Name"></p>
-              <p><input type="text" placeholder="Last Name"></p>
-              <p><input type="email" placeholder="Email"></p>
-              <p><input type="tel" placeholder="Phone"></p>
-              <p><textarea name="bill" id="bill" cols="80" rows="10" placeholder="Address"></textarea></p>
-              <p><input type="text" placeholder="City"></p>
-              <p><input type="text" placeholder="Pincode"></p>
-              <button type="submit" class="btn btn-primary btn-lg">Add Address</button>
+            <form action="{% url 'add_address' %}" method="POST">
+              {% csrf_token %}
+              <div class="container py-4">
+                {% if messages %}
+                  <div class="container">
+                  <div class="row">
+                    <div class="col-md-12">
+                    <div class="messages">
+                      {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                      {{ message }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+                {% endif %}
+                <p><input type="text" placeholder="First Name" name="first_name" required></p>
+                <p><input type="text" placeholder="Last Name" name="last_name"></p>
+                <p><input type="email" placeholder="Email" name="email" required></p>
+                <p><input type="tel" placeholder="Phone" name="phone" required></p>
+                <p><input type="text" placeholder="Address Line 1" name="address_line_1" required></p>
+                <p><input type="text" placeholder="Address Line 2" name="address_line_2"></p>
+                <p><input type="text" placeholder="City" name="city" required></p>
+                <p><input type="text" placeholder="Pincode" name="pincode" required></p>
+                <p><textarea name="order_note" cols="80" rows="3" placeholder="Order Note"></textarea></p>
+                <button type="submit" class="btn btn-primary btn-lg">Add Address</button>
+              </div>
             </form>
           </div>
         </div>
       </div>
     </main>
-    
   </div>
 </div>
 

@@ -12,6 +12,7 @@ from django.db.models import Q
 from cartapp.models import Cart, CartItem
 from cartapp.views import _cart_id
 import requests
+from ordersapp.models import Order
 
 
 # Create your views here.
@@ -285,7 +286,31 @@ def my_orders(request):
 
 @login_required
 def add_address(request):
+    if request.method == 'POST':
+        current_user = request.user
+
+        order = Order()
+        order.user = current_user
+        order.first_name = request.POST.get('first_name')
+        order.last_name = request.POST.get('last_name')
+        order.email = request.POST.get('email')
+        order.phone = request.POST.get('phone')
+        order.address_line_1 = request.POST.get('address_line_1')
+        order.address_line_2 = request.POST.get('address_line_2')
+        order.city = request.POST.get('city')
+        order.pincode = request.POST.get('pincode')
+        order.order_note = request.POST.get('order_note')
+
+        order.order_total = 0.0
+        order.shipping = 0.0
+        order.tax = 0.0
+
+        order.save()
+
+        messages.success(request, 'New address added successfully.')
+
     return render(request, 'userapp/add_address.html')
+
 
 @login_required
 def manage_address(request):
