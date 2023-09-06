@@ -1,13 +1,33 @@
 from django.shortcuts import render, redirect
 from cartapp.models import CartItem
-from ordersapp.models import Order
+from ordersapp.models import Order, Payment
 from ordersapp.forms import OrderForm
 import datetime
+from userapp.models import User
+
 # Create your views here.
 
 
+def cash_on_delivery(request, order_number):
+    current_user = request.user
+    order = Order.objects.get(order_number=order_number)
+    order.is_ordered = True
+    payment = Payment(user=current_user, payment_method="Cash On Delivery", status="Not Paid")
+    payment.save()
+    order.payment = payment
+    order.save()
+    cart = CartItem.objects.filter(user=current_user)
+    cart.delete()
+    context = {'order': order}
+    return redirect('order_confirmed')
+
 def payments(request):
-    return render(request, 'userapp/payments.html')
+    current_user = request.user
+    orders = Order.objects.filter(user=current_user)
+    context = {
+        'orders': orders
+        }
+    return render(request, 'userapp/payments.html', context)
 
 def place_order(request, total=0, quantity=0):
     current_user = request.user
@@ -57,9 +77,24 @@ def place_order(request, total=0, quantity=0):
             order_number = current_date = str(data.id)
             data.order_number = order_number
             data.save()
-            return redirect('checkout')
+
+            order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
+            context = {
+                'order': order,
+                'cart_items': cart_items,
+                'total': total,
+                'shipping': shipping,
+                'tax': tax,
+                'grand_total': grand_total,
+            }
+            return render(request, 'userapp/payments.html', context)
     else:
         return redirect('checkout')
+    
+def order_confirmed(request):
+    
+    return render(request, 'userapp/order_confirmed.html')
+    
 
 
 

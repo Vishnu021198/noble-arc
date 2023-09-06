@@ -21,10 +21,12 @@
 	<!-- cart -->
 
 	{% if not cart_items %}
-		<div class="empty-cart-message">
+		<div class="empty-cart-message text-center" style="padding: 200px 0;">
 			<h2>Your Shopping Cart is Empty</h2>
-			<a href="{% url 'product_list' %}" class="continue-shopping-link">Continue Shopping</a>
-	  	</div>
+			<div class="cart-buttons">
+				<a href="{% url 'product_list' %}" class="boxed-btn black">Continue Shopping</a>
+			</div>
+		</div>	
 	{% else %}
 			<div class="cart-section mt-150 mb-150">
 				<div class="container">
@@ -97,7 +99,7 @@
 								</div>
 							</div>
 
-							<div class="coupon-section">
+							{% comment %} <div class="coupon-section">
 								<h3>Apply Coupon</h3>
 								<div class="coupon-form-wrap">
 									<form action="index.html">
@@ -105,7 +107,7 @@
 										<p><input type="submit" value="Apply"></p>
 									</form>
 								</div>
-							</div>
+							</div> {% endcomment %}
 						</div>
 					</div>
 				</div>

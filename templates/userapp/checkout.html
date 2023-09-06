@@ -70,7 +70,7 @@
                             <tbody class="order-details-body">
                                 {% for cart_item in cart_items %}
                                     <tr>
-                                        <td class="product-image"><a href=""><img src="{{ cart_item.product.product_images.url }}" alt="">{{ cart_item.product.product_name }}</a></td>
+                                        <td class="product-image"><img src="{{ cart_item.product.product_images.url }}" alt="">{{ cart_item.product.product_name }}</a></td>
                                         <td>{{ cart_item.quantity }}</td>
                                         <td>₹{{ cart_item.product.price }}</td>
                                         <td>₹{{ cart_item.sub_total }}</td>
