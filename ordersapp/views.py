@@ -1,37 +1,63 @@
 from django.shortcuts import render, redirect
 from cartapp.models import CartItem
-from ordersapp.models import Order, Payment
+from ordersapp.models import Order, Payment, OrderProduct
 from ordersapp.forms import OrderForm
 import datetime
 from userapp.models import User
+from django.db import transaction
 
 # Create your views here.
 
 
+
+@transaction.atomic
 def cash_on_delivery(request, order_number):
     current_user = request.user
-    order = Order.objects.get(order_number=order_number)
-    order.is_ordered = True
+    try:
+        order = Order.objects.get(order_number=order_number, user=current_user, is_ordered=False)
+    except Order.DoesNotExist:
+        return redirect('order_confirmed')
+    
+   
     payment = Payment(user=current_user, payment_method="Cash On Delivery", status="Not Paid")
     payment.save()
+    
+   
+    order.is_ordered = True
     order.payment = payment
     order.save()
-    cart = CartItem.objects.filter(user=current_user)
-    cart.delete()
+    
+    
+    cart_items = CartItem.objects.filter(user=current_user)
+    
+    
+    for cart_item in cart_items:
+        order_product = OrderProduct(
+            order=order,
+            payment=payment,
+            user=current_user,
+            product=cart_item.product,
+            quantity=cart_item.quantity,
+            product_price=cart_item.product.price,
+        )
+        order_product.save()
+    
+    cart_items.delete()
+    
     context = {'order': order}
     return redirect('order_confirmed')
+
 
 def payments(request):
     current_user = request.user
     orders = Order.objects.filter(user=current_user)
     context = {
-        'orders': orders
+        'orders': orders,
         }
     return render(request, 'userapp/payments.html', context)
 
 def place_order(request, total=0, quantity=0):
     current_user = request.user
-
     cart_items = CartItem.objects.filter(user=current_user)
     cart_count = cart_items.count()
     if cart_count <= 0:
@@ -94,9 +120,3 @@ def place_order(request, total=0, quantity=0):
 def order_confirmed(request):
     
     return render(request, 'userapp/order_confirmed.html')
-    
-
-
-
-
-
