@@ -1,0 +1,36 @@
+{% extends 'userapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style>
+</style>
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <h1>Your Profile</h1>
+          <p>My Orders</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    {% include 'userapp/includes/sidebar.html' %}
+	<!-- Main content area -->
+    <main class="main-content">
+	
+    </main>  
+  
+  </div>
+</div>
+
+{% endblock %}

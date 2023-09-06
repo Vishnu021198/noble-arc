@@ -3,71 +3,78 @@
 {% load static %}
 
 {% block content %}
-    <!-- breadcrumb-section -->
-    <div class="breadcrumb-section breadcrumb-bg">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2 text-center">
-                    <div class="breadcrumb-text">
-                        <h1>Hello&nbsp;&nbsp;{{user.name}}</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- end breadcrumb section -->
+<style>
+  .main-content {
+	padding-left: 30px;
+    font-size: 18px;
+	margin-top: 30px;
+  }
+</style>
 
-    <div class="container mt-4">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3">
-                <div class="list-group">
-                    <a href="" class="list-group-item list-group-item-action">
-                        Account
-                    </a>
-                    <a href="" class="list-group-item list-group-item-action">
-                        My Orders
-                    </a>
-                    <a href="" class="list-group-item list-group-item-action">
-                        WishList
-                    </a>
-                    <a href="/add_address" class="list-group-item list-group-item-action">
-                        Add Address
-                    </a>
-                    <a href="" class="list-group-item list-group-item-action">
-                        Manage Address
-                    </a>
-                    <a href="" class="list-group-item list-group-item-action">
-                        Reset Password
-                    </a>
-                </div>
-            </div>
-
-            <!-- Dashboard Content -->
-            <div class="col-md-9">
-                <!-- Edit Profile Section -->
-                <div class="card" style="text-align: center; background-color: #f9f9f9; padding: 20px; border-radius: 10px;">
-                    <div class="card-body">
-                        <p class="mb-0" style="color: black; font-size: 18px; font-weight: bold;">
-                            {{user.name}}
-                        </p>
-                        <p class="mb-0" style="color: black; font-size: 16px;">
-                            {{user.email}}
-                        </p>
-                        <p style="color: black; font-size: 16px;">{{user.mobile}}</p>
-                    </div>
-                    <a href="" style="text-decoration: none; color: #007bff; font-weight: bold;">Edit Profile</a>
-                </div>
-                <br>
-                <!-- Total Orders Section -->
-                <div class="card" style="text-align: center; background-color: #f9f9f9; padding: 20px; border-radius: 10px;">
-                    <div class="card-body">
-                        <h5 class="card-title" style="color: black; font-size: 18px; font-weight: bold;">Total Orders</h5>
-                        <h4 style="color: black; font-size: 24px; font-weight: bold;">{{order}}</h4>
-                    </div>
-                    <a href="" style="text-decoration: none; color: #007bff; font-weight: bold;">View Orders</a>
-                </div>
-            </div>
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <h1>Your Profile</h1>
+          <p>Hello {{ user.name }}</p>
         </div>
+      </div>
     </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    {% include 'userapp/includes/sidebar.html' %}
+
+    <main class="main-content">
+		<form action="{% url 'edit_profile' %}" method="POST">
+			{% csrf_token %}
+			<div class="container py-4">
+			  <div class="row">
+				<div class="col-md-12 mb-3">
+				  <label for="name" class="form-label fs-5">Full Name</label>
+				  <input type="text" class="form-control form-control-lg" id="name" name="name" value="{{ user.name }}">
+				</div>
+				<div class="col-md-12 mb-3">
+				  <label for="mobile" class="form-label fs-5">Mobile Number</label>
+				  <input type="text" class="form-control form-control-lg" id="mobile" name="mobile" value="{{ user.mobile }}">
+				</div>
+				<div class="col-md-12 mb-3">
+				  <label for="email" class="form-label fs-5">Email Address</label>
+				  <input type="email" class="form-control form-control-lg" id="email" name="email" value="{{ user.email }}">
+				</div>
+			  </div>
+			  <!-- Display messages -->
+			{% if messages %}
+			<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+				<div class="messages">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					</div>
+					{% endfor %}
+				</div>
+				</div>
+			</div>
+			</div>
+			{% endif %}
+			  <button type="submit" class="btn btn-primary btn-lg">Update Profile</button>
+			</div>
+		</form>		  
+    </main>
+	
+  </div>
+</div>
+
+
 {% endblock %}

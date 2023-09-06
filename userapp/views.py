@@ -242,9 +242,55 @@ def user_profile(request):
 
     return render(request, 'userapp/user_profile.html')
 
+
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        new_name = request.POST.get('name')
+        new_mobile = request.POST.get('mobile')
+        new_email = request.POST.get('email')
+
+        if User.objects.filter(name=new_name).exclude(id=user.id).exists():
+            messages.error(request, 'Username is already taken')
+            return redirect('edit_profile')
+
+        if User.objects.filter(email=new_email).exclude(id=user.id).exists():
+            messages.error(request, 'Email is already taken')
+            return redirect('edit_profile')
+
+        if User.objects.filter(mobile=new_mobile).exclude(id=user.id).exists():
+            messages.error(request, 'Mobile number is already taken')
+            return redirect('edit_profile')
+
+        user.name = new_name
+        user.mobile = new_mobile
+        user.email = new_email
+        user.save()
+
+        messages.success(request, 'Profile updated successfully')
+        return redirect('user_profile')
+
+    return render(request, 'userapp/user_profile.html')
+
+
+
+
+@login_required
+def my_orders(request):
+
+    return render(request, 'userapp/my_orders.html')
+
+@login_required
 def add_address(request):
-    
     return render(request, 'userapp/add_address.html')
+
+@login_required
+def manage_address(request):
+    
+    return render(request, 'userapp/manage_address.html')
 
 
 

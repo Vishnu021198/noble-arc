@@ -1,0 +1,83 @@
+{% load static %}
+
+<style>
+  
+  .menu-inner {
+    list-style: none;
+    padding: 0; 
+    padding-left: 30px; 
+  }
+
+  .menu-item {
+    margin-bottom: 10px; 
+    font-size: 18px; 
+  }
+
+  .menu-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none; 
+    color: #051922; 
+    font-weight: bold; 
+  }
+
+  .menu-icon {
+    margin-right: 8px;
+  }
+  .main-content {
+	padding-left: 30px;
+  font-size: 18px;
+	margin-top: 30px;
+  display: flex;
+  }
+</style>
+
+    <!-- Sidebar -->
+    <nav id="sidebar" class="col-md-3 col-lg-3 d-md-block bg-light sidebar">
+      <div class="position-sticky">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+          <div class="menu-inner-shadow"></div>
+          <ul class="menu-inner py-5"> 
+            <li class="menu-item">
+              <a href="{% url 'user_profile' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="Analytics">Edit Profile</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="{% url 'my_orders' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-package"></i>
+                <div data-i18n="Support">My Orders</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="#" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-category"></i>
+                <div data-i18n="Support">Wishlist</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="{% url 'add_address' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Documentation">Add Address</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="{% url 'manage_address' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-map"></i>
+                <div data-i18n="Documentation">Manage Address</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="#" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-discount"></i>
+                <div data-i18n="Documentation">Coupons</div>
+              </a>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </nav>
+
