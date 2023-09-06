@@ -1,5 +1,5 @@
 from django.contrib import admin
-from orderapp.models import Payment, Order, OrderProduct
+from ordersapp.models import Payment, Order, OrderProduct
 
 # Register your models here.
 

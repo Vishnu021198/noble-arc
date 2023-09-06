@@ -36,6 +36,7 @@ class Order(models.Model):
     pincode = models.CharField(max_length=10)
     order_note = models.CharField(max_length=100, blank=True)
     order_total = models.FloatField()
+    shipping = models.FloatField()
     tax = models.FloatField()
     status = models.CharField(max_length=10, choices=STATUS, default='New')
     ip = models.CharField(max_length=20, blank=True)
@@ -44,7 +45,7 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user.name
+        return self.first_name
     
 
 class OrderProduct(models.Model):

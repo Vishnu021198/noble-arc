@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from userapp.models import Product
 from cartapp.models import Cart, CartItem
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
@@ -56,22 +57,26 @@ def add_cart(request, product_id):
 
 
 def remove_cart(request, product_id):
-    product = Product.objects.filter(id=product_id).first()  
+    product = Product.objects.filter(id=product_id).first()
+    
     try:
         if request.user.is_authenticated:
-            cart_item = CartItem.objects.get(product=product, user=request.user)
+            cart_item = CartItem.objects.filter(product=product, user=request.user).first()
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
-            cart_item = CartItem.objects.get(product=product, cart=cart)
-        if cart_item.quantity > 1:
-            cart_item.quantity -= 1
-            cart_item.save()
-        else:
-            cart_item.delete()
-    except CartItem.DoesNotExist:
-        pass 
-    
+            cart_item = CartItem.objects.filter(product=product, cart=cart).first()
+        
+        if cart_item:
+            if cart_item.quantity > 1:
+                cart_item.quantity -= 1
+                cart_item.save()
+            else:
+                cart_item.delete()
+    except ObjectDoesNotExist:
+        pass
+
     return redirect('cart')
+
 
 def remove_cart_item(request, product_id):
     

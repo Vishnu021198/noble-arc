@@ -37,49 +37,17 @@
 						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
 						      <div class="card-body">
 						        <div class="billing-address-form">
-						        	<form action="" method="POST">{% csrf_token %}
-						        		<p><input type="text" placeholder="First Name" required></p>
-										<p><input type="text" placeholder="Last Name"></p>
-						        		<p><input type="email" placeholder="Email" required></p>
-						        		<p><input type="tel" placeholder="Phone" required></p>
-                                        <p><input type="text" placeholder="Address Line 1" required></p>
-										<p><input type="text" placeholder="Address Line 2"></p>
-										<p><input type="text" placeholder="City" required></p>
-										<p><input type="text" placeholder="Pincode" required></p>
-						        		<p><textarea name="bill" id="bill" cols="30" rows="10" placeholder="Say Something"></textarea></p>
+						        	<form action="{% url 'place_order' %}" method="POST">{% csrf_token %}
+						        		<p><input type="text" name="first_name" placeholder="First Name" required></p>
+										<p><input type="text" name="last_name" placeholder="Last Name"></p>
+						        		<p><input type="email" name="email" placeholder="Email" required></p>
+						        		<p><input type="tel" name="phone" placeholder="Phone" required></p>
+                                        <p><input type="text" name="address_line_1" placeholder="Address Line 1" required></p>
+										<p><input type="text" name="address_line_2" placeholder="Address Line 2"></p>
+										<p><input type="text" name="city" placeholder="City" required></p>
+										<p><input type="text" name="pincode" placeholder="Pincode" required></p>
+						        		<p><textarea name="order_note" id="bill" cols="30" rows="10" placeholder="Say Something"></textarea></p>
 						        	
-						        </div>
-						      </div>
-						    </div>
-						  </div>
-						  <div class="card single-accordion">
-						    <div class="card-header" id="headingTwo">
-						      <h5 class="mb-0">
-						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-						          Shipping Address
-						        </button>
-						      </h5>
-						    </div>
-						    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-						      <div class="card-body">
-						        <div class="shipping-address-form">
-						        	<p>Your shipping address form is here.</p>
-						        </div>
-						      </div>
-						    </div>
-						  </div>
-						  <div class="card single-accordion">
-						    <div class="card-header" id="headingThree">
-						      <h5 class="mb-0">
-						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-						          Card Details
-						        </button>
-						      </h5>
-						    </div>
-						    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-						      <div class="card-body">
-						        <div class="card-details">
-						        	<p>Your card details goes here.</p>
 						        </div>
 						      </div>
 						    </div>
