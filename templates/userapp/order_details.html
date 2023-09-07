@@ -1,0 +1,54 @@
+{% extends 'userapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
+          <div class="breadcrumb-text">
+            <h1>Your Profile</h1>
+            <p>Order Details</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end breadcrumb section -->
+  
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      {% include 'userapp/includes/sidebar.html' %}
+      <!-- Main content area -->
+      <main class="main-content">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Product Image</th>
+              <th scope="col">Product Name</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody class="table-border-bottom-0">
+            {% for order_product in order_products %}
+            <tr>
+                <td><img src="{{ order_product.product.product_images.url }}" alt="{{ order_product.product.product_name }}" width="100"></td>
+                <td>{{ order_product.product.product_name }}</td>
+                <td>{{ order_product.quantity }}</td>
+                <td>₹{{ order_product.product_price }}</td>
+                <td>₹{{ order_product.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+      </main>
+    </div>
+  </div>
+  
+
+{% endblock %}

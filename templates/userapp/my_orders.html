@@ -3,8 +3,6 @@
 {% load static %}
 
 {% block content %}
-<style>
-</style>
 
 <!-- breadcrumb-section -->
 <div class="breadcrumb-section breadcrumb-bg">
@@ -25,11 +23,42 @@
   <div class="row">
     <!-- Sidebar -->
     {% include 'userapp/includes/sidebar.html' %}
-	<!-- Main content area -->
+    <!-- Main content area -->
     <main class="main-content">
-	
-    </main>  
-  
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Order No.</th>
+            <th scope="col">Full Address</th>
+            <th scope="col">Mobile</th>
+            <th scope="col">Total Amount</th>
+            <th scope="col">Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td>{{ order.order_number }}</td>
+            <td>
+              <p>{{ order.address_line_1 }},{{ order.city}}</p>
+            </td>
+            <td>{{ order.phone }}</td>
+            <td>${{ order.order_total }}</td>
+            <td>{{ order.created_at|date:"F j, Y, g:i a" }}</td>
+            <td>{{ order.status }}</td>
+            <td>
+              <a href="{% url 'order_details' order.id %}" class="btn btn-primary">Details</a>
+              {% if order.status == "New" or order.status == "Accepted" %}
+                <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger">Cancel</a>
+              {% endif %}
+            </td>      
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </main>
   </div>
 </div>
 

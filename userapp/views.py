@@ -12,7 +12,7 @@ from django.db.models import Q
 from cartapp.models import Cart, CartItem
 from cartapp.views import _cart_id
 import requests
-from ordersapp.models import Order
+from ordersapp.models import Order, OrderProduct
 from ordersapp.forms import OrderForm
 
 
@@ -282,8 +282,46 @@ def edit_profile(request):
 
 @login_required
 def my_orders(request):
+    orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'userapp/my_orders.html', context)
 
-    return render(request, 'userapp/my_orders.html')
+
+@login_required
+def order_details(request, order_id):
+    order_products = OrderProduct.objects.filter(order__user=request.user, order__id=order_id)
+
+    for order_product in order_products:
+        order_product.total = order_product.quantity * order_product.product_price
+
+    context = {
+        'order_products': order_products,
+    }
+
+    return render(request, 'userapp/order_details.html', context)
+
+
+@login_required
+def cancel_order(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id, user=request.user)
+
+        if order.status in ["New", "Accepted"]:
+            order.status = "Cancelled"
+            order.save()
+            messages.success(request, 'Order has been cancelled successfully.')
+        else:
+            messages.error(request, 'Order cannot be cancelled.')
+
+    except Order.DoesNotExist:
+        messages.error(request, 'Order not found.')
+
+    return redirect('my_orders')
+
+
+
 
 @login_required
 def add_address(request):
