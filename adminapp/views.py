@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from userapp.models import Product, Category, User, ProductImage
 from django.views.decorators.cache import cache_control, never_cache
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-
+from ordersapp.models import Order, OrderProduct
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -332,10 +332,52 @@ def unblock_user(request, user_id):
 
 
 
+
+
 @login_required
 def admin_orders(request):
-    return render(request, 'adminapp/admin_orders.html')
+    orders = Order.objects.filter(is_ordered=True).order_by('-created_at')
+    context = {'orders': orders}
+    return render(request, 'adminapp/admin_orders.html', context)
 
+
+
+@login_required
+def update_order_status(request, order_id, new_status):
+    
+    order = get_object_or_404(Order, pk=order_id)
+    
+    if new_status == 'New':
+        order.status = 'New'
+    elif new_status == 'Accepted':
+        order.status = 'Accepted'
+    elif new_status == 'Completed':
+        order.status = 'Completed'
+    elif new_status == 'Cancelled':
+        order.status = 'Cancelled'
+    
+    order.save()
+    
+    messages.success(request, f"Order #{order.order_number} has been updated to '{new_status}' status.")
+    
+    return redirect('admin_orders')
+
+
+
+@login_required
+def admin_order_details(request, order_id):
+
+    order_products = OrderProduct.objects.filter(order__user=request.user, order__id=order_id)
+
+    for order_product in order_products:
+        order_product.total = order_product.quantity * order_product.product_price
+
+    context = {
+        'order_products': order_products,
+    }
+
+
+    return render(request, 'adminapp/admin_order_details.html', context)
 
 
 @login_required

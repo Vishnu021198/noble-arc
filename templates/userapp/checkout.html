@@ -39,7 +39,7 @@
 						        <div class="billing-address-form">
 						        	<form action="{% url 'place_order' %}" method="POST">{% csrf_token %}
 						        		<p><input type="text" name="first_name" placeholder="First Name" required></p>
-										<p><input type="text" name="last_name" placeholder="Last Name"></p>
+										<p><input type="text" name="last_name" placeholder="Last Name" required></p>
 						        		<p><input type="email" name="email" placeholder="Email" required></p>
 						        		<p><input type="tel" name="phone" placeholder="Phone" required></p>
                                         <p><input type="text" name="address_line_1" placeholder="Address Line 1" required></p>

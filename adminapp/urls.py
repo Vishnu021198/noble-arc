@@ -18,7 +18,9 @@ urlpatterns = [
     path('admin_users/', views.admin_users, name='admin_users'),
     path('block_user/<int:user_id>/', views.block_user, name='block_user'),
     path('unblock_user/<int:user_id>/', views.unblock_user, name='unblock_user'),
-    path('admin_orders/', views.admin_products, name='admin_orders'),
-    path('admin_coupons/', views.admin_products, name='admin_coupons'),
-    path('admin_banners/', views.admin_products, name='admin_banners'),
+    path('admin_orders/', views.admin_orders, name='admin_orders'),
+    path('update_order_status/<int:order_id>/<str:new_status>/', views.update_order_status, name='update_order_status'),
+    path('admin_order_details/<int:order_id>/', views.admin_order_details, name='admin_order_details'),
+    path('admin_coupons/', views.admin_coupons, name='admin_coupons'),
+    path('admin_banners/', views.admin_banners, name='admin_banners'),
 ]
