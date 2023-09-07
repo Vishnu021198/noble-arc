@@ -39,6 +39,7 @@ def cash_on_delivery(request, order_number):
             product=cart_item.product,
             quantity=cart_item.quantity,
             product_price=cart_item.product.price,
+            ordered=True,
         )
         order_product.save()
     

@@ -13,6 +13,7 @@ from cartapp.models import Cart, CartItem
 from cartapp.views import _cart_id
 import requests
 from ordersapp.models import Order
+from ordersapp.forms import OrderForm
 
 
 # Create your views here.
@@ -314,8 +315,19 @@ def add_address(request):
 
 @login_required
 def manage_address(request):
-    
-    return render(request, 'userapp/manage_address.html')
+    current_user = request.user
+    addresses = Order.objects.filter(user=current_user)
+    context = {
+        'addresses': addresses,
+    }
+    return render(request, 'userapp/manage_address.html', context)
+
+
+@login_required
+def edit_address(request):
+
+    return render(request, 'userapp/edit_address.html')
+
 
 
 

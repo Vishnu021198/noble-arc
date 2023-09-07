@@ -35,7 +35,7 @@ class Order(models.Model):
     city = models.CharField(max_length=50)
     pincode = models.CharField(max_length=10)
     order_note = models.CharField(max_length=100, blank=True)
-    order_total = models.FloatField(default=0.0)
+    order_total = models.FloatField()
     shipping = models.FloatField()
     tax = models.FloatField()
     status = models.CharField(max_length=10, choices=STATUS, default='New')

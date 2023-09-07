@@ -1,15 +1,12 @@
 {% extends 'userapp/base.html' %}
-
 {% load static %}
 
 {% block content %}
 <style>
-  .card-body {
-    padding-left: 10px;
-    font-size: 18px;
-    margin-top: -24px;
-    }
- 
+  .card {
+    padding-bottom: 30px;
+  }
+
 </style>
 
 <!-- breadcrumb-section -->
@@ -31,26 +28,29 @@
   <div class="row">
     <!-- Sidebar -->
     {% include 'userapp/includes/sidebar.html' %}
-
     <main class="main-content">
-      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-        <div class="card-body">
-          <div class="billing-address-form">
-            <form action="index.html">
-              <p><input type="text" placeholder="First Name"></p>
-              <p><input type="text" placeholder="Last Name"></p>
-              <p><input type="email" placeholder="Email"></p>
-              <p><input type="tel" placeholder="Phone"></p>
-              <p><textarea name="bill" id="bill" cols="80" rows="10" placeholder="Address"></textarea></p>
-              <p><input type="text" placeholder="City"></p>
-              <p><input type="text" placeholder="Pincode"></p>
-              <button type="submit" class="btn btn-primary btn-lg">Add Address</button>
-            </form>
+      {% if addresses %}
+      <div class="row">
+        {% for address in addresses %}
+        <div class="col-md-6">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">{{ address.first_name }} {{ address.last_name }}</h5>
+              <p class="card-text">{{ address.address_line_1 }}</p>
+              <p class="card-text">{{ address.address_line_2 }}</p>
+              <p class="card-text">{{ address.city }}, {{ address.pincode }}</p>
+              <p class="card-text">Phone: {{ address.phone }}</p>
+              <a href="{% url 'edit_address' %}" class="btn btn-primary">Edit Address</a>
+              <a href="" class="btn btn-danger">Delete Address</a>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
+      {% else %}
+      <h4>No Addresses Found</h4>
+      {% endif %}
     </main>
-    
   </div>
 </div>
 
