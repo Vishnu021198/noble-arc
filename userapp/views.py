@@ -362,11 +362,42 @@ def manage_address(request):
 
 
 @login_required
-def edit_address(request):
+def edit_address(request, address_id):
+    address = Order.objects.get(pk=address_id)
 
-    return render(request, 'userapp/edit_address.html')
+    if request.method == 'POST':
+
+        address.first_name = request.POST.get('first_name')
+        address.last_name = request.POST.get('last_name')
+        address.email = request.POST.get('email')
+        address.phone = request.POST.get('phone')
+        address.address_line_1 = request.POST.get('address_line_1')
+        address.address_line_2 = request.POST.get('address_line_2')
+        address.city = request.POST.get('city')
+        address.pincode = request.POST.get('pincode')
+        address.order_note = request.POST.get('order_note')
+
+        address.save()
+
+        messages.success(request, 'Address updated successfully.')
+
+        return redirect('edit_address', address_id=address.id)
+
+    
+
+    context = {
+        'address': address,
+    }
+    return render(request, 'userapp/edit_address.html', context)
 
 
+
+def delete_address(request, address_id):
+
+    address = Order.objects.get(pk=address_id)
+    address.delete()
+
+    return redirect('manage_address')
 
 
 def search(request):

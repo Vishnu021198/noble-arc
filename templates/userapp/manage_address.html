@@ -32,7 +32,7 @@
       {% if addresses %}
       <div class="row">
         {% for address in addresses %}
-        <div class="col-md-6">
+        <div class="col-md-3">
           <div class="card mb-3">
             <div class="card-body">
               <h5 class="card-title">{{ address.first_name }} {{ address.last_name }}</h5>
@@ -40,8 +40,8 @@
               <p class="card-text">{{ address.address_line_2 }}</p>
               <p class="card-text">{{ address.city }}, {{ address.pincode }}</p>
               <p class="card-text">Phone: {{ address.phone }}</p>
-              <a href="{% url 'edit_address' %}" class="btn btn-primary">Edit Address</a>
-              <a href="" class="btn btn-danger">Delete Address</a>
+              <a href="{% url 'edit_address' address.id %}" class="btn btn-warning" style="background-color: #F28123; color: white; border-radius: 35px;">Edit Address</a>
+              <a href="" class="btn btn-danger" style="border-radius: 35px;">Delete Address</a>
             </div>
           </div>
         </div>

@@ -46,12 +46,12 @@
             </td>
             <td>{{ order.phone }}</td>
             <td>${{ order.order_total }}</td>
-            <td>{{ order.created_at|date:"F j, Y, g:i a" }}</td>
+            <td>{{ order.created_at|date:"F j, Y" }}</td>
             <td>{{ order.status }}</td>
             <td>
-              <a href="{% url 'order_details' order.id %}" class="btn btn-primary">Details</a>
+              <a href="{% url 'order_details' order.id %}" class="btn btn-warning" style="background-color: #F28123; color: white; border-radius: 35px;">Details</a>
               {% if order.status == "New" or order.status == "Accepted" %}
-                <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger">Cancel</a>
+                <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger" style="border-radius: 35px;">Cancel</a>
               {% endif %}
             </td>      
           </tr>
