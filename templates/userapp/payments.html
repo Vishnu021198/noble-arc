@@ -95,13 +95,42 @@
 								</table>
 								<div class="cart-buttons">
 									<a type="button" href="{% url 'cash_on_delivery' order.order_number %}" class="btn btn-warning btn-lg btn-block">Cash On Delivery</a>
-								</div>
+									<a id="rzp-button1" class="btn btn-primary btn-lg btn-block">Pay with Razorpay</a>
+								</div>															
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
+			<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+			<script>
+				var options = {
+					"key": "rzp_test_bENwqWBNfFVEOx",
+					"amount": {{ order.order_total|floatformat:2 }} * 100,
+					"currency": "INR",
+					"name": "Noble Arc",
+					"description": "Purchase",
+					"image": "https://example.com/your_logo",
+					"order_id": "{{ payment.id }}", 
+					"handler": function (response) {
+						alert("Payment successful!");
+						var orderNumber = "{{ order.order_number }}"; // Get the order number
+						window.location.href = '/order/confirm_razorpay_payment/' + orderNumber + '/';
+					},
+						
+					"theme": {
+						"color": "#3399cc"
+					}
+				};
+
+				var rzp1 = new Razorpay(options);
+				document.getElementById('rzp-button1').addEventListener('click', function (e) {
+					rzp1.open();
+					e.preventDefault();
+				});
+			</script>
 	<!-- end cart -->
 
 
