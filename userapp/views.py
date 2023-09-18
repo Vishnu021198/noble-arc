@@ -401,17 +401,12 @@ def delete_address(request, address_id):
 
 @login_required
 def my_coupons(request):
-    user_coupons = UserCoupons.objects.filter(user=request.user)
-    coupon_status = {}
-    for user_coupon in user_coupons:
-        coupon_status[user_coupon.coupon] = 'Used' if user_coupon.is_used else 'Active'
-
-    context = {
-        'coupon_status': coupon_status,
-    }
-
-    return render(request, 'userapp/my_coupons.html', context)
-
+    if request.user.is_authenticated:
+        coupons = Coupons.objects.all()
+        context = {'coupons': coupons}
+        return render(request, 'userapp/my_coupons.html', context)
+    else:
+        return redirect('user_login')
 
 def search(request):
     products = []
