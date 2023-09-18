@@ -47,6 +47,11 @@ class Coupons(models.Model):
             return self.is_expired
         else:
             return self.is_expired
+        
+    def is_used_by_user(self, user):
+        redeemed_details = UserCoupons.objects.filter(coupon=self, user=user, is_used=True)
+        return redeemed_details.exists()
+
 
 
 class UserCoupons(models.Model):
@@ -56,3 +61,5 @@ class UserCoupons(models.Model):
 
     def __str__(self):
         return self.coupon.coupon_code
+    
+

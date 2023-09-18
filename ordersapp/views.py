@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone   
 
 # Create your views here.
 
@@ -58,12 +59,41 @@ def cash_on_delivery(request, order_number):
     return redirect('order_confirmed')
 
 
-def payments(request):
+def payments(request, order_id):
     current_user = request.user
-    orders = Order.objects.filter(user=current_user)
+    coupon_code =   request.session['coupon_code']
+    coupon = Coupons.objects.get(coupon_code=coupon_code)
+    cart_items = CartItem.objects.filter(user=current_user)
+    cart_count = cart_items.count()
+    if cart_count <= 0:
+        return redirect('product_list')
+    
+    tax = 0
+    shipping = 0
+    grand_total = 0
+    discount = 0
+    total = 0
+    quantity = 0
+
+    for cart_item in cart_items:
+        total += (cart_item.product.price * cart_item.quantity)
+        quantity += cart_item.quantity
+
+    tax = (18 * total) / 100
+    shipping = (100 * quantity)
+    grand_total = total + tax + shipping - coupon.discount
+    
+
+    order = Order.objects.get(user=current_user, is_ordered=False, id=order_id)
     context = {
-        'orders': orders,
-        }
+        'order': order,
+        'cart_items': cart_items,
+        'total': total,
+        'shipping': shipping,
+        'tax': tax,
+        'discount': coupon.discount,
+        'grand_total': grand_total,
+    }
     return render(request, 'userapp/payments.html', context)
 
 def place_order(request, total=0, quantity=0):
@@ -129,6 +159,43 @@ def place_order(request, total=0, quantity=0):
     else:
         return redirect('checkout')
     
+
+def apply_coupon(request):
+
+    if request.method == 'POST':
+        coupon_code = request.POST.get('coupon_code')
+        order_id = request.POST.get('order_id')
+        request.session['coupon_code'] = coupon_code
+
+
+        try:
+            coupon = Coupons.objects.get(coupon_code=coupon_code)
+            order = Order.objects.get(id=order_id)
+            if coupon.valid_from <= timezone.now() <= coupon.valid_to:
+
+                if order.order_total >= coupon.minimum_amount:
+                    if coupon.is_used_by_user(request.user):
+                        messages.error(request, 'Coupon has already been Used')
+                    else:
+                        updated_total = order.order_total - float(coupon.discount)
+                        order.order_total = updated_total
+                        order.save()
+
+                        used_coupons = UserCoupons(user = request.user, coupon = coupon, is_used = True)
+                        used_coupons.save()
+
+                        return redirect('payments', order_id)
+                
+                else:
+                    messages.error(request, 'Coupon is not Applicable for Order Total')
+            else:
+                messages.error(request, 'Coupon is not Applicable for the current date')
+
+        except Coupons.DoesNotExist:
+            messages.error(request, 'Coupon code is Invalid')
+
+    return redirect('payments', order_id)
+
 
 
 
