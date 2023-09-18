@@ -161,26 +161,6 @@ def cart(request):
 
 
 
-
-
-
-
-
-@login_required
-def coupon_list(request):
-    user = request.user
-    user_coupons = UserCoupons.objects.filter(user=user)
-    unused_coupons = Coupons.objects.exclude(usercoupons__is_used=True)
-
-    context={
-        'unused_coupons':unused_coupons,
-        'user_coupons':user_coupons
-
-    }
-    return render(request,'userapp/coupons.html',context)
-
-
-
 @login_required(login_url='user_login')
 def checkout(request, total=0, quantity=0):
     tax = 0
