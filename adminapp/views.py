@@ -6,6 +6,7 @@ from django.views.decorators.cache import cache_control, never_cache
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from ordersapp.models import Order, OrderProduct
+from cartapp.models import Coupons, UserCoupons
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -382,7 +383,84 @@ def admin_order_details(request, order_id):
 
 @login_required
 def admin_coupons(request):
-    return render(request, 'adminapp/admin_coupons.html')
+    if request.user.is_superadmin:
+        coupons = Coupons.objects.all()
+        context = {'coupons': coupons}
+        return render(request, 'adminapp/admin_coupons.html', context)
+    else:
+        return HttpResponseForbidden("You don't have permission to access this page.")
+
+@login_required
+def add_coupons(request):
+    if request.method == 'POST':
+        coupon_code = request.POST.get('coupon_code')
+        description = request.POST.get('description')
+        minimum_amount = request.POST.get('minimum_amount')
+        discount = request.POST.get('discount')
+        valid_from = request.POST.get('valid_from')
+        valid_to = request.POST.get('valid_to')
+
+        try:
+            minimum_amount = int(minimum_amount)
+            discount = int(discount)
+        except ValueError:
+            messages.error(request, "Minimum Amount and Discount must be integers.")
+            return redirect('add_coupons')
+
+        coupon = Coupons(
+            coupon_code=coupon_code,
+            description=description,
+            minimum_amount=minimum_amount,
+            discount=discount,
+            valid_from=valid_from,
+            valid_to=valid_to
+        )
+        coupon.save()
+        messages.success(request, "Coupon added successfully.")
+        return redirect('admin_coupons')
+
+    return render(request, 'adminapp/add_coupons.html')
+
+
+
+
+@login_required
+def edit_coupons(request, coupon_id):
+    try:
+        coupon = Coupons.objects.get(pk=coupon_id)
+    except Coupons.DoesNotExist:
+        return redirect('admin_coupons')
+
+    if request.method == 'POST':
+        coupon.coupon_code = request.POST.get('coupon_code')
+        coupon.description = request.POST.get('description')
+        coupon.minimum_amount = int(request.POST.get('minimum_amount'))
+        coupon.discount = int(request.POST.get('discount'))
+        coupon.valid_from = request.POST.get('valid_from')
+        coupon.valid_to = request.POST.get('valid_to')
+        
+        coupon.save()
+        
+        return redirect('admin_coupons')
+
+    context = {'coupon': coupon}
+    return render(request, 'adminapp/edit_coupons.html', context)
+
+
+
+
+@login_required
+def delete_coupons(request, coupon_id):
+    try:
+        coupon = Coupons.objects.get(pk=coupon_id)
+    except Coupons.DoesNotExist:
+        return redirect('admin_coupons')
+
+    if request.method == 'POST':
+        coupon.delete()
+        messages.success(request, "Coupon deleted successfully.")
+    
+    return redirect('admin_coupons')
 
 
 

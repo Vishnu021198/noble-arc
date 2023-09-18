@@ -1,0 +1,58 @@
+{% extends 'userapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <h1>Your Profile</h1>
+          <p>My Coupons</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    {% include 'userapp/includes/sidebar.html' %}
+    <!-- Main content area -->
+    <main class="main-content">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Coupon Code</th>
+            <th scope="col">Min. Purchase Amount</th>
+            <th scope="col">Discount Amount</th>
+            <th scope="col">Valid Till</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for coupon in all_coupons %}
+          <tr>
+            <td>{{ coupon.coupon_code }}</td>
+            <td>{{ coupon.minimum_amount }}</td>
+            <td>{{ coupon.discount }}</td>
+            <td>{{ coupon.valid_to|date:"d-m-Y" }}</td>
+            <td>
+              {% with status=coupon_status.coupon %}
+                {{ status }}
+              {% endwith %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </main>
+  </div>
+</div>
+
+{% endblock %}

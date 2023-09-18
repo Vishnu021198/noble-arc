@@ -7,9 +7,9 @@ from . import verify
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import Paginator
 from django.db.models import Q
-from cartapp.models import Cart, CartItem
+from cartapp.models import Cart, CartItem, UserCoupons, Coupons
 from cartapp.views import _cart_id
 import requests
 from ordersapp.models import Order, OrderProduct
@@ -398,6 +398,19 @@ def delete_address(request, address_id):
     address.delete()
 
     return redirect('manage_address')
+
+@login_required
+def my_coupons(request):
+    user_coupons = UserCoupons.objects.filter(user=request.user)
+    coupon_status = {}
+    for user_coupon in user_coupons:
+        coupon_status[user_coupon.coupon] = 'Used' if user_coupon.is_used else 'Active'
+
+    context = {
+        'coupon_status': coupon_status,
+    }
+
+    return render(request, 'userapp/my_coupons.html', context)
 
 
 def search(request):
