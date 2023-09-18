@@ -64,6 +64,7 @@
 								</div>
 							</div>
 						</div>
+						
 
 						<div class="col-lg-5">
 							<div class="total-section">
@@ -100,7 +101,25 @@
 								<div class="cart-buttons">
 									<a type="button" href="{% url 'cash_on_delivery' order.order_number %}" class="btn btn-warning btn-lg btn-block">Cash On Delivery</a>
 									<a id="rzp-button1" class="btn btn-primary btn-lg btn-block">Pay with Razorpay</a>
-								</div>															
+								</div>
+								<form method="post" action="{% url 'apply_coupon' %}">
+									{% csrf_token %}
+									<div class="coupon-section">
+										<h3>Apply Coupon</h3>
+										<div class="coupon-form-wrap">
+											{% for message in messages %}
+												<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+													{{ message }}
+													<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+											{% endfor %}
+											<p><input type="text" name="coupon_code" class="form-control" placeholder="Enter your Coupon"></p>
+											<button type="submit" class="btn btn-warning btn-lg" style="background-color: #F28123; color: white; border-radius: 35px;">Apply</button>
+										</div>
+									</div>
+								</form>														
 							</div>
 						</div>
 					</div>

@@ -88,10 +88,6 @@
 											<td>₹{{ shipping }}</td>
 										</tr>
 										<tr class="total-data">
-											<td><strong>Discount: </strong></td>
-											<td>₹{{ discount }}</td>
-										</tr>
-										<tr class="total-data">
 											<td><strong>Grand Total: </strong></td>
 											<td>₹{{ grand_total }}</td>
 										</tr>
@@ -100,27 +96,6 @@
 								<div class="cart-buttons">
 									<a href="{% url 'checkout' %}" class="boxed-btn black">Check Out</a>
 									<a href="{% url 'product_list' %}" class="boxed-btn black">Continue Shopping</a>
-								</div>
-							</div>
-							
-							
-							<div class="coupon-section">
-								<h3>Apply Coupon</h3>
-								<div class="coupon-form-wrap">
-									{% for message in messages %}
-									<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-									{{ message }}
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-									</div>
-									{% endfor %}
-									
-									<form method="POST" action="{% url 'cart' %}">{% csrf_token %}
-										<p><input type="text" name="coupon" class="form-control" placeholder="Enter your Coupon"></p>
-										<a href="{% url 'my_coupons' %}" class="text-black"><label>Have Coupon?</label></a><br>
-										<button type="submit" class="btn btn-warning btn-lg" style="background-color: #F28123; color: white; border-radius: 35px;">Apply</button>
-									</form>
 								</div>
 							</div>
 						</div>

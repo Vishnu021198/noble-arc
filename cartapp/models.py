@@ -8,10 +8,9 @@ class Cart(models.Model):
     cart_id = models.CharField(max_length=250, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     date_added = models.DateField(auto_now_add=True)
-    coupon = models.ForeignKey('cartapp.Coupons', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return self.user
+        return self.cart_id
     
 
 class CartItem(models.Model):
@@ -27,23 +26,6 @@ class CartItem(models.Model):
     def __str__(self):
         return self.product.product_name
     
-    def discount_amount(self):
-        if self.cart and self.cart.coupon:
-            discount = (self.product.price * self.quantity * self.cart.coupon.discount) / 100
-            return discount
-        else:
-            discount = 0
-            return discount
-
-        
-    def total_after_discount(self):
-        sub_total = self.sub_total()
-        discount = self.discount_amount()
-        if discount is not None:
-            return sub_total - discount
-        else:
-            return sub_total
-
 
 class Coupons(models.Model):
     coupon_code = models.CharField(max_length=100, unique=True)

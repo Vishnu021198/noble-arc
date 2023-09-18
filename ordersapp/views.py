@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from cartapp.models import CartItem
 from ordersapp.models import Order, Payment, OrderProduct
 from ordersapp.forms import OrderForm
@@ -7,6 +7,12 @@ from userapp.models import User
 from django.db import transaction
 import razorpay
 from django.conf import settings
+from django.contrib import messages
+from cartapp.models import Coupons, UserCoupons, Cart
+from django.core.exceptions import ObjectDoesNotExist
+from decimal import Decimal
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -70,6 +76,7 @@ def place_order(request, total=0, quantity=0):
     tax = 0
     shipping = 0
     grand_total = 0
+    discount = 0
 
     for cart_item in cart_items:
         total += (cart_item.product.price * cart_item.quantity)
@@ -115,13 +122,13 @@ def place_order(request, total=0, quantity=0):
                 'total': total,
                 'shipping': shipping,
                 'tax': tax,
+                'discount': discount,
                 'grand_total': grand_total,
             }
             return render(request, 'userapp/payments.html', context)
     else:
         return redirect('checkout')
     
-
 
 
 
