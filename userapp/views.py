@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Product,Category,User
 from django.contrib import messages
@@ -9,11 +9,11 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.core.paginator import Paginator
 from django.db.models import Q
-from cartapp.models import Cart, CartItem, UserCoupons, Coupons
+from cartapp.models import Cart, CartItem, Coupons, Wishlist
 from cartapp.views import _cart_id
 import requests
 from ordersapp.models import Order, OrderProduct
-from ordersapp.forms import OrderForm
+
 
 
 # Create your views here.
@@ -407,6 +407,49 @@ def my_coupons(request):
         return render(request, 'userapp/my_coupons.html', context)
     else:
         return redirect('user_login')
+    
+
+
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    user = request.user
+
+    if not Wishlist.objects.filter(user=user, product=product).exists():
+        Wishlist.objects.create(user=user, product=product)
+        messages.success(request, 'Product added to wishlist.')
+    else:
+        messages.warning(request, 'Product is already in the wishlist.')
+
+    return redirect('product_detail', category_id=product.category.id, product_id=product.id)
+
+
+
+@login_required
+def view_wishlist(request):
+    user = request.user
+
+    wishlist_items = Wishlist.objects.filter(user=user)
+    wishlist_products = [item.product for item in wishlist_items]
+
+    return render(request, 'userapp/wishlist.html', {'wishlist_products': wishlist_products})
+
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    user = request.user
+    product = get_object_or_404(Product, id=product_id)
+    
+    try:
+        wishlist_item = Wishlist.objects.get(user=user, product=product)
+        wishlist_item.delete()
+        messages.success(request, 'Product removed from wishlist.')
+    except Wishlist.DoesNotExist:
+        messages.warning(request, 'Product was not in your wishlist.')
+
+    return redirect('view_wishlist')
+
+
 
 def search(request):
     products = []

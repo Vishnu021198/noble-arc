@@ -3,75 +3,73 @@
 {% load static %}
 
 {% block content %}
+    <!-- breadcrumb-section -->
+    <div class="breadcrumb-section breadcrumb-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <div class="breadcrumb-text">
+                        <h1>Product Details</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end breadcrumb section -->
 
-	
-	<!-- breadcrumb-section -->
-	<div class="breadcrumb-section breadcrumb-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="breadcrumb-text">
-						<h1>Product Details</h1>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end breadcrumb section -->
-
-	<!-- single product -->
-	<div class="single-product mt-150 mb-150">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-5">
-					<div class="d-flex">
-						<div class="product-thumbnails mr-3">
-							{% for image in product_images %}
-								<div class="thumbnail">
-									<img src="{{ image.image.url }}" alt="" style="width: 500px;">
-								</div>
-							{% endfor %}
-						</div>
-						<div class="single-product-img">
-							<div class="magnify">
-								<img src="{{ single_product.product_images.url }}" alt="">
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-7">
-					<div class="single-product-content">
-						<h3>{{ single_product.product_name }}</h3>
-						<p class="single-product-pricing"><span>{{ single_product.category }}</span>₹{{ single_product.price }}</p>
-						<ul>
-							<li>{{ single_product.description }}</li>
-						</ul>
-						<br>
-						<div class="single-product-form">
-							{% if single_product.category.soft_deleted %}
-								<h5 class="text-danger">Out of Stock</h5>
-							{% else %}
-								{% if user.is_authenticated %}
-									{% if is_out_of_stock %}
-										<h5 class="text-danger">Out of Stock</h5>
-									{% else %}
-										<a href="{% url 'add_cart' single_product.id %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-										<a href="/cart" class="cart-btn"><i class="fas fa fa-bolt"></i> Buy Now</a>
-									{% endif %}
-								{% else %}
-									{% if is_out_of_stock %}
-										<h5 class="text-danger">Out of Stock</h5>
-									{% else %}
-										<a href="{% url 'add_cart' single_product.id %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-										<a href="{% url 'user_login' %}" class="cart-btn"><i class="fas fa fa-bolt"></i> Buy Now</a>
-									{% endif %}
-								{% endif %}
-							{% endif %}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
+    <!-- single product -->
+    <div class="single-product mt-150 mb-150">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="d-flex">
+                        <div class="product-thumbnails mr-3">
+                            {% for image in product_images %}
+                                <div class="thumbnail">
+                                    <img src="{{ image.image.url }}" alt="" style="width: 500px;">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="single-product-img">
+                            <div class="magnify">
+                                <img src="{{ single_product.product_images.url }}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="single-product-content">
+                        <h3>{{ single_product.product_name }}</h3>
+                        <p class="single-product-pricing"><span>{{ single_product.category }}</span>₹{{ single_product.price }}</p>
+                        <ul>
+                            <li>{{ single_product.description }}</li>
+                        </ul>
+                        <br>
+                        <div class="single-product-form">
+                            {% if single_product.category.soft_deleted %}
+                                <h5 class="text-danger">Out of Stock</h5>
+                            {% else %}
+                                {% if user.is_authenticated %}
+                                    {% if is_out_of_stock %}
+                                        <h5 class="text-danger">Out of Stock</h5>
+                                    {% else %}
+                                        <a href="{% url 'add_cart' single_product.id %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+                                        <a href="/cart" class="cart-btn"><i class="fas fa fa-bolt"></i> Buy Now</a>
+                                        <a href="{% url 'add_to_wishlist' single_product.id %}" class="cart-btn"><i class="fas fa-heart"></i> Add to Wishlist</a>
+                                    {% endif %}
+                                {% else %}
+                                    {% if is_out_of_stock %}
+                                        <h5 class="text-danger">Out of Stock</h5>
+                                    {% else %}
+                                        <a href="{% url 'add_cart' single_product.id %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+                                        <a href="{% url 'user_login' %}" class="cart-btn"><i class="fas fa fa-bolt"></i> Buy Now</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
