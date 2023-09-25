@@ -176,34 +176,27 @@ def place_order(request, total=0, quantity=0):
 
 #     if request.method == "POST":
 #         form = OrderForm(request.POST)
-
+#         print("****")
 #         if form.is_valid():
-#             selected_address_id = form.get('selected_address')
-#             if selected_address_id:
-#                 data = Order()
-#                 data.user = current_user
+#             print("**A***")
+#             data = Order()
+#             data.user = current_user
+#             data.first_name = form.cleaned_data['first_name']
+#             data.last_name = form.cleaned_data['last_name']
+#             data.email = form.cleaned_data['email']
+#             data.phone = form.cleaned_data['phone']
+#             data.address_line_1 = form.cleaned_data['address_line_1']
+#             data.address_line_2 = form.cleaned_data['address_line_2']
+#             data.city = form.cleaned_data['city']
+#             data.pincode = form.cleaned_data['pincode']
+#             data.order_note = form.cleaned_data['order_note']
+
+#             # Check if 'selected_address' exists in cleaned_data
+#             if 'selected_address' in form.cleaned_data:
+#                 print("**B***")
 #                 selected_address = Order.objects.get(id=selected_address_id)
-#                 data.first_name = selected_address.first_name
-#                 data.last_name = selected_address.last_name
-#                 data.email = selected_address.email
-#                 data.phone = selected_address.phone
-#                 data.address_line_1 = selected_address.address_line_1
-#                 data.address_line_2 = selected_address.address_line_2
-#                 data.city = selected_address.city
-#                 data.pincode = selected_address.pincode
-#                 data.order_note = selected_address.order_note
-#             else:
-#                 data = Order()
-#                 data.user = current_user
-#                 data.first_name = form.cleaned_data['first_name']
-#                 data.last_name = form.cleaned_data['last_name']
-#                 data.email = form.cleaned_data['email']
-#                 data.phone = form.cleaned_data['phone']
-#                 data.address_line_1 = form.cleaned_data['address_line_1']
-#                 data.address_line_2 = form.cleaned_data['address_line_2']
-#                 data.city = form.cleaned_data['city']
-#                 data.pincode = form.cleaned_data['pincode']
-#                 data.order_note = form.cleaned_data['order_note']
+#                 selected_address_id = form.cleaned_data['selected_address']
+#                 # Use selected_address data here if needed
 
 #             # Calculate other order data (total, shipping, tax, etc.)
 #             data.order_total = grand_total
@@ -237,9 +230,12 @@ def place_order(request, total=0, quantity=0):
 
 #             return render(request, 'userapp/payments.html', context)
 #         else:
-#             pass
+#             print("***end**")
+#             # Handle the case when form is not valid
+
 #     else:
 #         return redirect('checkout')
+
 
 
 

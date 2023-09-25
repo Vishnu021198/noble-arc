@@ -509,7 +509,6 @@ def order_invoice(request, order_id):
     tax = 0
     shipping = 0
     grand_total = 0  
-    coupon.discount = 0
 
     subtotal = 0  
     for order_item in order_items:
