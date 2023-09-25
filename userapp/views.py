@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Product,Category,User
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.contrib.auth import authenticate,login,logout
 from . import verify
 from django.contrib.auth.decorators import login_required
@@ -9,10 +9,11 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.core.paginator import Paginator
 from django.db.models import Q
-from cartapp.models import Cart, CartItem, Coupons, Wishlist
+from cartapp.models import Cart, CartItem, Coupons, Wishlist, UserCoupons
 from cartapp.views import _cart_id
 import requests
-from ordersapp.models import Order, OrderProduct
+from ordersapp.models import Order, OrderProduct, Payment
+
 
 
 
@@ -130,7 +131,7 @@ def user_login(request):
                 return redirect('/')
             
         else:
-            messages.error(request, "Email or password is incorrect")
+            messages.warning(request, "Email or password is incorrect")
 
     return render(request, 'userapp/user_login.html')
 
@@ -277,6 +278,32 @@ def edit_profile(request):
 
     return render(request, 'userapp/user_profile.html')
 
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        current_password = request.POST['current_password']
+        new_password = request.POST['new_password']
+        confirm_password = request.POST['confirm_password']
+        
+        user = User.objects.get(name__exact=request.user.name)
+    
+        if new_password == confirm_password:
+            success = user.check_password(current_password)
+            if success:
+                user.set_password(new_password)
+                user.save()
+                auth.logout(request)
+                messages.success(request, 'Password Changed Successfully')
+                return redirect('user_login')
+            else:
+                messages.error(request, 'Please enter valid current password')
+                return redirect('change_password')
+        else:
+            messages.error(request, 'Password does not match')
+            return redirect('change_password')
+
+    return render(request, 'userapp/change_password.html')
 
 
 
@@ -462,6 +489,53 @@ def search(request):
         'products': products,
     }
     return render(request, 'userapp/product_list.html', context)
+
+
+
+def order_invoice(request, order_id):
+    user = request.user
+    try:
+        order = Order.objects.get(id=order_id)
+        order_items = OrderProduct.objects.filter(order=order)
+        coupon_code = request.session['coupon_code']
+        coupon = Coupons.objects.get(coupon_code=coupon_code)
+        payment = Payment.objects.get(order=order)
+    except (Order.DoesNotExist, Payment.DoesNotExist):
+        return render(request, 'userapp/product_list.html')
+    
+    cart_items = CartItem.objects.filter(user=user)
+    
+    total = 0
+    tax = 0
+    shipping = 0
+    grand_total = 0  
+    coupon.discount = 0
+
+    subtotal = 0  
+    for order_item in order_items:
+        order_item_total = order_item.product.price * order_item.quantity
+        total = order_item_total  
+        subtotal += order_item_total
+
+    tax = (18 * subtotal) / 100
+    shipping = 100  
+
+    grand_total = subtotal + tax + shipping - coupon.discount
+
+    context = {
+        'order': order,
+        'order_items': order_items,
+        'payment': payment,
+        'grand_total': grand_total,
+        'cart_items': cart_items,
+        'total': total,
+        'discount': coupon.discount,
+        'subtotal': subtotal,
+    }
+    return render(request, 'userapp/order_invoice.html', context)
+
+
+
 
 
 

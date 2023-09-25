@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title itemprop="name">Order Invoice</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            margin-top: 20px;
+            background: #eee;
+        }
+
+        .invoice {
+            padding: 30px;
+        }
+
+        .invoice h2 {
+            margin-top: 0px;
+            line-height: 0.8em;
+        }
+
+        .invoice .small {
+            font-weight: 300;
+        }
+
+        .invoice hr {
+            margin-top: 10px;
+            border-color: #ddd;
+        }
+
+        .invoice .table tr.line {
+            border-bottom: 1px solid #ccc;
+        }
+
+        .invoice .table td {
+            border: none;
+        }
+
+        .invoice .identity {
+            margin-top: 10px;
+            font-size: 1.1em;
+            font-weight: 300;
+        }
+
+        .invoice .identity strong {
+            font-weight: 600;
+        }
+
+        .grid {
+            position: relative;
+            width: 100%;
+            background: #fff;
+            color: #666666;
+            border-radius: 2px;
+            margin-bottom: 25px;
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: black; 
+        }
+    </style>
+   
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="grid invoice">
+                    <div class="grid-body">
+                        <div class="invoice-title">
+                            <br>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h2>
+                                        Invoice<br>
+                                        <span class="small">Order No: {{order.order_number}} </span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <address>
+                                    <strong>From:</strong>
+                                    <br>
+                                    Noble Arc<br>
+                                    Industial Area, Parakulam, Anakara(P.O),<br>
+                                    Palakkad(Dist), Kerala.<br>
+                                    <abbr title="Phone">Phone:</abbr>
+                                    +91 9074931053
+                                    
+                                </address>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <address>
+                                    <strong>Shipped To:</strong>
+                                    <br>
+                                    {{order.full_name}}<br>
+                                    {{order.address_line_1}},<br>
+                                    {{order.address_line_2}}, {{order.city}} - {{order.pincode}}<br>
+                                    <abbr title="Phone">Phone:</abbr>
+                                    {{order.phone}} 
+                                </address>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <address>
+                                    <strong>Payment Method:</strong>
+                                    <br>
+                                    {{order.payment}}<br>
+                                    <br>
+                                </address>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <address>
+                                    <strong>Order Date:</strong>
+                                    <br>{{ order.created_at|date:"d/m/Y" }}
+                                </address>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3>ORDER SUMMARY</h3>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr class="line">
+                                            <td class="text-left">
+                                                <strong>Products</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong>Quantity</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong>Price</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong>Total</strong>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order_item in order_items %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ order_item.product.product_name }}</strong>
+                                            </td>
+                                            <td class="text-right">{{ order_item.quantity }}</td>
+                                            <td class="text-right">₹{{ order_item.product.price }}</td>
+                                            <td class="text-right">₹{{ total }}</td>
+                                        
+                                        </tr>
+                                        {% endfor %}
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td class="text-right">
+                                                <strong>Sub Total</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong>₹{{ subtotal }}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td class="text-right">
+                                                <strong>GST</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong>₹{{order.tax}}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td class="text-right">
+                                                <strong>Shipping</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong>₹{{order.shipping}}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td class="text-right">
+                                                <strong>Discount</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong>₹{{ discount }}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td class="text-right">
+                                                <strong>Grand Total</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <strong>₹{{ grand_total }}</strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right identity">
+                                <button id="pdfButton" style="border-radius: 20px; background-color: orange; color: white; padding: 10px 20px; border: none; cursor: pointer;">
+                                    Download Invoice
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
+    <script>
+      document.getElementById("pdfButton").addEventListener("click", function () {
+        // Create a new jsPDF instance
+        const doc = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4',
+        });
+    
+        // Add the HTML content to the PDF
+        doc.html(document.querySelector(".container"), {
+          callback: function (pdf) {
+            // Save the PDF as "invoice.pdf"
+            pdf.save('invoice.pdf');
+          },
+        });
+      });
+    </script>
+</body>
+</html>

@@ -31,6 +31,24 @@
 			<div class="cart-section mt-150 mb-150">
 				<div class="container">
 					<div class="row">
+						{% if messages %}
+						<div class="container">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="messages">
+										{% for message in messages %}
+										<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+										{{ message }}
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+										</div>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endif %}
 						<div class="col-lg-8 col-md-12">
 							<div class="cart-table-wrap">
 								<table class="cart-table">

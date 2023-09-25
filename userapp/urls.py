@@ -15,6 +15,7 @@ urlpatterns = [
     path('signup_otp/', views.signup_otp, name='signup_otp'),
     path('user_profile/', views.user_profile, name='user_profile'),
     path('edit_profile/', views.edit_profile, name='edit_profile'),
+    path('change_password/', views.change_password, name='change_password'),
     path('my_orders/', views.my_orders, name='my_orders'),
     path('order_details/<int:order_id>/', views.order_details, name='order_details'),
     path('cancel_order/<int:order_id>/', views.cancel_order, name='cancel_order'),
@@ -26,6 +27,7 @@ urlpatterns = [
     path('add_to_wishlist/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('view_wishlist/', views.view_wishlist, name='view_wishlist'),
     path('remove_from_wishlist/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+    path('order_invoice/<int:order_id>/', views.order_invoice, name='order_invoice'),
     path('user_logout/', views.user_logout, name='user_logout'),
     path('search/', views.search, name='search'),
 ]

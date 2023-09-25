@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from userapp.models import Product
 from cartapp.models import Cart, CartItem, Coupons, UserCoupons
+from ordersapp.models import Order
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -14,7 +15,6 @@ def _cart_id(request):
     return cart
 
 
-
 def add_cart(request, product_id):
     current_user = request.user
     product = Product.objects.get(id=product_id)
@@ -22,8 +22,11 @@ def add_cart(request, product_id):
     if current_user.is_authenticated:
         cart_item = CartItem.objects.filter(product=product, user=current_user).first()
         if cart_item:
-            cart_item.quantity += 1
-            cart_item.save()
+            if cart_item.quantity < product.quantity:
+                cart_item.quantity += 1
+                cart_item.save()
+            else:
+                messages.warning(request, 'Product quantity in cart exceeds available quantity.')
         else:
             cart_item = CartItem.objects.create(
                 product=product,
@@ -42,8 +45,11 @@ def add_cart(request, product_id):
 
         cart_item = CartItem.objects.filter(product=product, cart=cart).first()
         if cart_item:
-            cart_item.quantity += 1
-            cart_item.save()
+            if cart_item.quantity < product.quantity:
+                cart_item.quantity += 1
+                cart_item.save()
+            else:
+                messages.warning(request, 'Product quantity in cart exceeds available quantity.')
         else:
             cart_item = CartItem.objects.create(
                 product=product,
@@ -52,6 +58,7 @@ def add_cart(request, product_id):
             )
 
         return redirect('cart')
+
 
 
 
@@ -137,9 +144,11 @@ def checkout(request, total=0, quantity=0):
     try:
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(user=request.user, is_active=True)
+            addresses = Order.objects.filter(user=request.user)
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+            addresses = None
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
@@ -158,9 +167,6 @@ def checkout(request, total=0, quantity=0):
         'tax': tax,
         'shipping': shipping,
         'grand_total': grand_total,
+        'addresses': addresses,
     }
     return render(request, 'userapp/checkout.html', context)
-
-
-
-

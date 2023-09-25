@@ -56,12 +56,13 @@ def cash_on_delivery(request, order_number):
     cart_items.delete()
     
     context = {'order': order}
-    return redirect('order_confirmed')
+
+    return render(request, 'userapp/order_confirmed.html', context)
 
 
 def payments(request, order_id):
     current_user = request.user
-    coupon_code =   request.session['coupon_code']
+    coupon_code = request.session['coupon_code']
     coupon = Coupons.objects.get(coupon_code=coupon_code)
     cart_items = CartItem.objects.filter(user=current_user)
     cart_count = cart_items.count()
@@ -95,6 +96,7 @@ def payments(request, order_id):
         'grand_total': grand_total,
     }
     return render(request, 'userapp/payments.html', context)
+
 
 def place_order(request, total=0, quantity=0):
     current_user = request.user
@@ -158,6 +160,89 @@ def place_order(request, total=0, quantity=0):
             return render(request, 'userapp/payments.html', context)
     else:
         return redirect('checkout')
+
+
+# def place_order(request, total=0, quantity=0):
+#     current_user = request.user
+#     cart_items = CartItem.objects.filter(user=current_user)
+#     cart_count = cart_items.count()
+#     if cart_count <= 0:
+#         return redirect('product_list')
+
+#     tax = 0
+#     shipping = 0
+#     grand_total = 0
+#     discount = 0
+
+#     if request.method == "POST":
+#         form = OrderForm(request.POST)
+
+#         if form.is_valid():
+#             selected_address_id = form.get('selected_address')
+#             if selected_address_id:
+#                 data = Order()
+#                 data.user = current_user
+#                 selected_address = Order.objects.get(id=selected_address_id)
+#                 data.first_name = selected_address.first_name
+#                 data.last_name = selected_address.last_name
+#                 data.email = selected_address.email
+#                 data.phone = selected_address.phone
+#                 data.address_line_1 = selected_address.address_line_1
+#                 data.address_line_2 = selected_address.address_line_2
+#                 data.city = selected_address.city
+#                 data.pincode = selected_address.pincode
+#                 data.order_note = selected_address.order_note
+#             else:
+#                 data = Order()
+#                 data.user = current_user
+#                 data.first_name = form.cleaned_data['first_name']
+#                 data.last_name = form.cleaned_data['last_name']
+#                 data.email = form.cleaned_data['email']
+#                 data.phone = form.cleaned_data['phone']
+#                 data.address_line_1 = form.cleaned_data['address_line_1']
+#                 data.address_line_2 = form.cleaned_data['address_line_2']
+#                 data.city = form.cleaned_data['city']
+#                 data.pincode = form.cleaned_data['pincode']
+#                 data.order_note = form.cleaned_data['order_note']
+
+#             # Calculate other order data (total, shipping, tax, etc.)
+#             data.order_total = grand_total
+#             data.shipping = shipping
+#             data.tax = tax
+#             data.ip = request.META.get('REMOTE_ADDR')
+#             data.save()
+
+#             # Generate order number and save
+#             yr = int(datetime.date.today().strftime('%Y'))
+#             dt = int(datetime.date.today().strftime('%d'))
+#             mt = int(datetime.date.today().strftime('%m'))
+#             d = datetime.date(yr, mt, dt)
+#             current_date = timezone.now().strftime("%Y%m%d")
+#             order_number = current_date + str(data.id)
+#             data.order_number = order_number
+#             data.save()
+
+#             # Get the order and prepare the context for rendering
+#             order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
+
+#             context = {
+#                 'order': order,
+#                 'cart_items': cart_items,
+#                 'total': total,
+#                 'shipping': shipping,
+#                 'tax': tax,
+#                 'discount': discount,
+#                 'grand_total': grand_total,
+#             }
+
+#             return render(request, 'userapp/payments.html', context)
+#         else:
+#             pass
+#     else:
+#         return redirect('checkout')
+
+
+
     
 
 def apply_coupon(request):
@@ -260,9 +345,15 @@ def razor(request):
 
 
 
-def order_confirmed(request):
+def order_confirmed(request, order_number):
+    user = request.user
+    order = Order.objects.get(order_number=order_number)
+
+    context = {
+        'order': order,
+    }
     
-    return render(request, 'userapp/order_confirmed.html')
+    return render(request, 'userapp/order_confirmed.html',context)
 
 
 
@@ -305,4 +396,5 @@ def confirm_razorpay_payment(request, order_number):
     cart_items.delete()
 
     context = {'order': order}
+
     return render(request, 'userapp/order_confirmed.html', context)

@@ -30,14 +30,23 @@
                     <div class="contact-form">
 
                         {% if messages %}
-							<div class="alert {% if messages.has_error %}error{% elif messages.has_warning %}warning{% endif %}">
-								{% for message in messages %}
-									<span class="message">
-										{{ message }}
-									</span>
-								{% endfor %}
-							</div>
-						{% endif %}
+                        <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                            <div class="messages">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        {% endif %}
 
                         <form method="POST" id="login-form" action="{% url 'user_login' %}">
                             {% csrf_token %}
