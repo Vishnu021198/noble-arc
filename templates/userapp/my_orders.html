@@ -52,8 +52,10 @@
               <a href="{% url 'order_details' order.id %}" class="btn btn-warning" style="background-color: #F28123; color: white; border-radius: 35px;">Details</a>
               {% if order.status == "New" or order.status == "Accepted" %}
                 <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger" style="border-radius: 35px;">Cancel</a>
+              {% elif order.status == "Completed" %}
+                <a href="{% url 'return_order' order.id %}" class="btn btn-info" style="border-radius: 35px;">Return</a>
               {% endif %}
-            </td>      
+            </td>                  
           </tr>
           {% endfor %}
         </tbody>

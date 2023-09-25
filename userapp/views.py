@@ -12,7 +12,7 @@ from django.db.models import Q
 from cartapp.models import Cart, CartItem, Coupons, Wishlist, UserCoupons
 from cartapp.views import _cart_id
 import requests
-from ordersapp.models import Order, OrderProduct, Payment
+from ordersapp.models import Order, OrderProduct, Payment, Wallet
 
 
 
@@ -347,6 +347,23 @@ def cancel_order(request, order_id):
 
     return redirect('my_orders')
 
+@login_required(login_url='login')
+def return_order(request, order_id):
+    order = Order.objects.get(id=order_id, user=request.user)
+
+    if order.status == 'Completed':
+        user = request.user
+        wallet, created = Wallet.objects.get_or_create(user=user)
+
+        wallet.amount += order.order_total
+        wallet.amount = round(wallet.amount, 2)
+        wallet.save()
+
+        order.status = 'Returned'
+        order.save()
+
+    return redirect('my_orders')
+
 
 
 
@@ -475,6 +492,22 @@ def remove_from_wishlist(request, product_id):
         messages.warning(request, 'Product was not in your wishlist.')
 
     return redirect('view_wishlist')
+
+
+@login_required(login_url='user_login')
+def my_wallet(request):
+    current_user = request.user
+    try:
+        wallet = Wallet.objects.get(user=current_user)
+    except Wallet.DoesNotExist:
+        wallet = Wallet.objects.create(user=current_user, amount=0)
+    wallet_amount = wallet.amount
+  
+    context = {'wallet_amount': wallet_amount}
+
+    return render(request, 'userapp/wallet.html', context)
+
+
 
 
 

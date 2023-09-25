@@ -21,6 +21,7 @@ class Order(models.Model):
         ('Accepted', 'Accepted'),
         ('Completed', 'Completed'),
         ('Cancelled', 'Cancelled'),
+        ('Returned', 'Returned'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -69,3 +70,17 @@ class OrderProduct(models.Model):
 
     def __str__(self):
         return self.product.product_name
+    
+
+    
+class Wallet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    amount = models.FloatField(default=100)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        self.amount = round(self.amount, 2)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Wallet for User : {self.user.name}"

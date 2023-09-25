@@ -1,0 +1,77 @@
+{% extends 'userapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+<style>
+  .wishlist-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .product-box {
+    flex: 1 9 calc(15% - 10px);
+    margin: 5px;
+    padding: 2px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+
+  .product-box img {
+    width: 50%;
+    height: auto;
+  }
+
+  .product-box h3 {
+    font-size: 16px;
+    margin: 10px 0;
+  }
+
+  .product-box p {
+    font-size: 14px;
+    margin: 5px 0;
+  }
+
+  .wishlist-empty {
+    text-align: center;
+  }
+</style>
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <h1>Your Profile</h1>
+          <p>My Wallet</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    {% include 'userapp/includes/sidebar.html' %}
+    <!-- Main content area -->
+    <main class="main-content col-lg-8">
+      <div class="container">
+        <div class="wishlist-container">
+          <div class="empty-cart-message text-center" style="padding: 200px 0;">
+            <h2>Your Wallet Balance:</h2>
+            <div class="cart-buttons">
+              <h3>₹{{ wallet_amount }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+{% endblock %}
