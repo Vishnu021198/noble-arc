@@ -120,8 +120,12 @@
                                         <strong>Shipped To:</strong>
                                         <br>
                                         {{order.full_name}}<br>
-                                        {{order.address_line_1}},<br>
-                                        {{order.address_line_2}}, {{order.city}} - {{order.pincode}}<br>
+                                        {{order.address_line_1}}<br>
+                                        {% if order.address_line_2 %}
+                                        {{order.address_line_2}},
+                                        {% endif %}
+                                        City : {{order.city}}<br>
+                                        Pincode : {{order.pincode}}<br>
                                         <abbr title="Phone">Phone:</abbr>
                                         {{order.phone}} 
                                     </address>
@@ -216,7 +220,7 @@
                                                     <strong>Grand Total</strong>
                                                 </td>
                                                 <td class="text-right">
-                                                    <strong>₹{{ grand_total }}</strong>
+                                                    <strong>₹{{ order.order_total }}</strong>
                                                 </td>
                                             </tr>
                                         </tbody>

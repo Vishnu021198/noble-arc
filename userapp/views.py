@@ -12,7 +12,7 @@ from django.db.models import Q
 from cartapp.models import Cart, CartItem, Coupons, Wishlist, UserCoupons
 from cartapp.views import _cart_id
 import requests
-from ordersapp.models import Order, OrderProduct, Payment, Wallet
+from ordersapp.models import Order, OrderProduct, Payment, Wallet, Address
 
 
 
@@ -257,15 +257,15 @@ def edit_profile(request):
         new_email = request.POST.get('email')
 
         if User.objects.filter(name=new_name).exclude(id=user.id).exists():
-            messages.error(request, 'Username is already taken')
+            messages.warning(request, 'Username is already taken')
             return redirect('edit_profile')
 
         if User.objects.filter(email=new_email).exclude(id=user.id).exists():
-            messages.error(request, 'Email is already taken')
+            messages.warning(request, 'Email is already taken')
             return redirect('edit_profile')
 
         if User.objects.filter(mobile=new_mobile).exclude(id=user.id).exists():
-            messages.error(request, 'Mobile number is already taken')
+            messages.warning(request, 'Mobile number is already taken')
             return redirect('edit_profile')
 
         user.name = new_name
@@ -297,10 +297,10 @@ def change_password(request):
                 messages.success(request, 'Password Changed Successfully')
                 return redirect('user_login')
             else:
-                messages.error(request, 'Please enter valid current password')
+                messages.warning(request, 'Please enter valid current password')
                 return redirect('change_password')
         else:
-            messages.error(request, 'Password does not match')
+            messages.warning(request, 'Password does not match')
             return redirect('change_password')
 
     return render(request, 'userapp/change_password.html')
@@ -343,12 +343,12 @@ def cancel_order(request, order_id):
         if order.status in ["New", "Accepted"]:
             order.status = "Cancelled"
             order.save()
-            messages.success(request, 'Order has been cancelled successfully.')
+            messages.success(request, 'Order cancelled.')
         else:
-            messages.error(request, 'Order cannot be cancelled.')
+            messages.warning(request, 'Order cannot be cancelled.')
 
     except Order.DoesNotExist:
-        messages.error(request, 'Order not found.')
+        messages.warning(request, 'Order not found.')
 
     return redirect('my_orders')
 
@@ -375,35 +375,40 @@ def return_order(request, order_id):
 @login_required
 def add_address(request):
     if request.method == 'POST':
-        current_user = request.user
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        address_line_1 = request.POST.get('address_line_1')
+        address_line_2 = request.POST.get('address_line_2')
+        city = request.POST.get('city')
+        pincode = request.POST.get('pincode')
 
-        order = Order()
-        order.user = current_user
-        order.first_name = request.POST.get('first_name')
-        order.last_name = request.POST.get('last_name')
-        order.email = request.POST.get('email')
-        order.phone = request.POST.get('phone')
-        order.address_line_1 = request.POST.get('address_line_1')
-        order.address_line_2 = request.POST.get('address_line_2')
-        order.city = request.POST.get('city')
-        order.pincode = request.POST.get('pincode')
-        order.order_note = request.POST.get('order_note')
 
-        order.order_total = 0.0
-        order.shipping = 0.0
-        order.tax = 0.0
+        address = Address(user=request.user, first_name=first_name, last_name=last_name, phone=phone, email=email, address_line_1=address_line_1, address_line_2=address_line_2, city=city, pincode=pincode)
+        address.save()
 
-        order.save()
 
+        if request.user.is_authenticated:
+            Address.objects.filter(user=request.user, is_default=True).update(is_default=False)
+            address.is_default = True
+            address.save()
+
+        source = request.GET.get('source', 'checkout')
         messages.success(request, 'New address added successfully.')
-
-    return render(request, 'userapp/add_address.html')
+        
+        if source == 'checkout':
+            return redirect('checkout')
+        else:
+            return redirect('add_address')
+    else:
+        return render(request, 'userapp/add_address.html')
 
 
 @login_required
 def manage_address(request):
     current_user = request.user
-    addresses = Order.objects.filter(user=current_user)
+    addresses = Address.objects.filter(user=current_user)
     context = {
         'addresses': addresses,
     }
@@ -412,7 +417,7 @@ def manage_address(request):
 
 @login_required
 def edit_address(request, address_id):
-    address = Order.objects.get(pk=address_id)
+    address = Address.objects.get(pk=address_id)
 
     if request.method == 'POST':
 
@@ -424,7 +429,6 @@ def edit_address(request, address_id):
         address.address_line_2 = request.POST.get('address_line_2')
         address.city = request.POST.get('city')
         address.pincode = request.POST.get('pincode')
-        address.order_note = request.POST.get('order_note')
 
         address.save()
 
@@ -443,7 +447,7 @@ def edit_address(request, address_id):
 
 def delete_address(request, address_id):
 
-    address = Order.objects.get(pk=address_id)
+    address = Address.objects.get(pk=address_id)
     address.delete()
 
     return redirect('manage_address')
@@ -535,42 +539,49 @@ def order_invoice(request, order_id):
     try:
         order = Order.objects.get(id=order_id)
         order_items = OrderProduct.objects.filter(order=order)
-        coupon_code = request.session['coupon_code']
-        coupon = Coupons.objects.get(coupon_code=coupon_code)
+        coupon_code = request.session.get('coupon_code', None) 
+        coupon = None 
+
+        if coupon_code:
+            try:
+                coupon = Coupons.objects.get(coupon_code=coupon_code)
+            except Coupons.DoesNotExist:
+                coupon = None
+
         payment = Payment.objects.get(order=order)
-    except (Order.DoesNotExist, Payment.DoesNotExist):
-        return render(request, 'userapp/product_list.html')
-    
-    cart_items = CartItem.objects.filter(user=user)
-    
-    total = 0
-    tax = 0
-    shipping = 0
-    grand_total = 0  
+        cart_items = CartItem.objects.filter(user=user)
 
-    subtotal = 0  
-    for order_item in order_items:
-        order_item_total = order_item.product.price * order_item.quantity
-        total = order_item_total  
-        subtotal += order_item_total
+        total = 0
+        tax = 0
+        shipping = 0
+        grand_total = 0  
 
-    tax = (18 * subtotal) / 100
-    shipping = 100  
+        subtotal = 0  
+        for order_item in order_items:
+            order_item_total = order_item.product.price * order_item.quantity
+            total = order_item_total  
+            subtotal += order_item_total
 
-    grand_total = subtotal + tax + shipping - coupon.discount
+        tax = (18 * subtotal) / 100
+        shipping = 100  
 
-    context = {
-        'order': order,
-        'order_items': order_items,
-        'payment': payment,
-        'grand_total': grand_total,
-        'cart_items': cart_items,
-        'total': total,
-        'discount': coupon.discount,
-        'subtotal': subtotal,
-    }
+        grand_total = subtotal + tax + shipping - (coupon.discount if coupon else 0)  
+
+        context = {
+            'order': order,
+            'order_items': order_items,
+            'payment': payment,
+            'grand_total': grand_total,
+            'cart_items': cart_items,
+            'total': total,
+            'discount': coupon.discount if coupon else 0,  
+            'subtotal': subtotal,
+        }
+
+    except Order.DoesNotExist:
+        messages.error(request, 'Order does not exist.')  
+        return redirect('product_list')  
     return render(request, 'userapp/order_invoice.html', context)
-
 
 
 

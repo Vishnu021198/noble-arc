@@ -309,7 +309,7 @@ def admin_users(request):
 
 
 
-@login_required
+
 def block_user(request, user_id):
     try:
         user = User.objects.get(pk=user_id)

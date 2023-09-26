@@ -1,114 +1,4 @@
 {% extends 'userapp/base.html' %}
-
-{% load static %}
-
-{% block content %}
-
-    <!-- breadcrumb-section -->
-	<div class="breadcrumb-section breadcrumb-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="breadcrumb-text">
-						<h1>Check Out</h1>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end breadcrumb section -->
-
-	<!-- check out section -->
-	<div class="checkout-section mt-150 mb-150">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6">
-					<div class="checkout-accordion-wrap">
-						<div class="accordion" id="accordionExample">
-						  <div class="card single-accordion">
-						    <div class="card-header" id="headingOne">
-						      <h5 class="mb-0">
-						        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						          Billing Address
-						        </button>
-						      </h5>
-						    </div>
-
-						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-						      <div class="card-body">
-						        <div class="billing-address-form">
-						        	<form action="{% url 'place_order' %}" method="POST">{% csrf_token %}
-						        		<p><input type="text" name="first_name" placeholder="First Name" required></p>
-										<p><input type="text" name="last_name" placeholder="Last Name" required></p>
-						        		<p><input type="email" name="email" placeholder="Email" required></p>
-						        		<p><input type="tel" name="phone" placeholder="Phone" required></p>
-                                        <p><input type="text" name="address_line_1" placeholder="Address Line 1" required></p>
-										<p><input type="text" name="address_line_2" placeholder="Address Line 2"></p>
-										<p><input type="text" name="city" placeholder="City" required></p>
-										<p><input type="text" name="pincode" placeholder="Pincode" required></p>
-						        		<p><textarea name="order_note" id="bill" cols="30" rows="10" placeholder="Say Something"></textarea></p>
-						        	
-						        </div>
-						      </div>
-						    </div>
-						  </div>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-6">
-					<div class="order-details-wrap">
-                        <table class="order-details">
-                            <thead>
-                                <tr>
-                                    <th>Products</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody class="order-details-body">
-                                {% for cart_item in cart_items %}
-                                    <tr>
-                                        <td class="product-image"><img src="{{ cart_item.product.product_images.url }}" alt="">{{ cart_item.product.product_name }}</a></td>
-                                        <td>{{ cart_item.quantity }}</td>
-                                        <td>₹{{ cart_item.product.price }}</td>
-                                        <td>₹{{ cart_item.sub_total }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                            <tbody class="checkout-details">
-                                <tr>
-                                    <td colspan="3">Subtotal</td>
-                                    <td>₹{{ total }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">GST</td>
-                                    <td>₹{{ tax }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">Shipping</td>
-                                    <td>₹{{ shipping }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">Grand Total</td>
-                                    <td>₹{{ grand_total }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button type="submit" name="submit" class="boxered-btn">Check Out</button>
-                    </div>
-				</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end check out section -->
-
-{% endblock %}
-
-
-{% comment %} {% extends 'userapp/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -130,36 +20,27 @@
     <div class="checkout-section mt-150 mb-150">
         <div class="container">
             <div class="row">
+                {% if messages %}
+				<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+					<div class="messages">
+						{% for message in messages %}
+						<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+						{{ message }}
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						</div>
+						{% endfor %}
+					</div>
+					</div>
+				</div>
+				</div>
+				{% endif %}
                 <div class="col-lg-6">
                     <div class="checkout-accordion-wrap">
                         <div class="accordion" id="accordionExample">
-                            <div class="card single-accordion">
-                                <div class="card-header" id="headingOne">
-                                    <h5 class="mb-0">
-                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            Add Shipping Address
-                                        </button>
-                                    </h5>
-                                </div>
-                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="billing-address-form">
-                                            <form action="{% url 'place_order' %}" method="POST">
-                                                {% csrf_token %}
-                                                <p><input type="text" name="first_name" placeholder="First Name" required></p>
-                                                <p><input type="text" name="last_name" placeholder="Last Name" required></p>
-                                                <p><input type="email" name="email" placeholder="Email" required></p>
-                                                <p><input type="tel" name="phone" placeholder="Phone" required></p>
-                                                <p><input type="text" name="address_line_1" placeholder="Address Line 1" required></p>
-                                                <p><input type="text" name="address_line_2" placeholder="Address Line 2"></p>
-                                                <p><input type="text" name="city" placeholder="City" required></p>
-                                                <p><input type="text" name="pincode" placeholder="Pincode" required></p>
-                                                <p><textarea name="order_note" id="bill" cols="30" rows="10" placeholder="Say Something"></textarea></p>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="card single-accordion">
                                 <div class="card-header" id="headingTwo">
                                     <h5 class="mb-0">
@@ -170,35 +51,40 @@
                                 </div>
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                     <div class="card-body">
-                                        <form action="{% url 'place_order' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="shipping-address-form">
-                                                {% if addresses %}
-                                                    <div class="form-check">
-                                                        {% for address in addresses %}
-                                                            <input class="form-check-input" type="radio" name="selected_address" id="flexRadioDefault{{ address.id }}" value="{{ address.id }}">
-                                                            <label class="form-check-label" for="flexRadioDefault{{ address.id }}">
-                                                                <main class="main-content">
-                                                                    <div class="row">
-                                                                        <div class="col-md-12">
-                                                                            <div class="card-body">
-                                                                                <h5 class="card-title">{{ address.first_name }} {{ address.last_name }}</h5>
-                                                                                <p class="card-text">{{ address.address_line_1 }}</p>
-                                                                                <p class="card-text">{{ address.address_line_2 }}</p>
-                                                                                <p class="card-text">{{ address.city }}, {{ address.pincode }}</p>
-                                                                                <p class="card-text">Phone: {{ address.phone }}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </main>
-                                                            </label>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% else %}
-                                                    <h4>No Addresses Found</h4>
-                                                {% endif %}
-                                            </div>
-                                        </form>
+                                        <div class="shipping-address-form">
+                                            {% if address_list %}
+                                                {% for address in address_list %}
+                                                    <main class="main-content">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title">{{ address.first_name }} {{ address.last_name }}</h5>
+                                                                    <p class="card-text">{{ address.address_line_1 }}</p>
+                                                                    {% if address.address_line_2 %}
+                                                                        <p class="card-text">{{ address.address_line_2 }}</p>
+                                                                    {% endif %}
+                                                                    <p class="card-text">{{ address.city }}, {{ address.pincode }}</p>
+                                                                    <p class="card-text">Phone: {{ address.phone }}</p>
+                                                                </div>
+                                                                <div class="form-check mt-2">
+                                                                    {% if address.is_default %}
+                                                                        <a href="#">Selected</a>
+                                                                    {% else %}
+                                                                        <a href="{% url 'set_default_address' address_id=address.id %}">
+                                                                            Select
+                                                                        </a>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </main>
+                                                {% endfor %}
+                                            {% else %}
+                                                <h4>No Addresses Found</h4>
+                                            {% endif %}
+                                            <br>
+                                            <a href="{% url 'add_address' %}?source=checkout" class="btn btn-warning" style="background-color: #F28123; color: white; border-radius: 35px;">Add Address</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -256,7 +142,7 @@
         </div>
     </div>
     <!-- end check out section -->
-{% endblock %} {% endcomment %}
+{% endblock %}
 
 
 

@@ -20,6 +20,7 @@
     <!-- single product -->
     <div class="single-product mt-150 mb-150">
         <div class="container">
+            
             <div class="row">
                 <div class="col-md-5">
                     <div class="d-flex">
@@ -67,6 +68,24 @@
                                 {% endif %}
                             {% endif %}
                         </div>
+                        {% if messages %}
+                            <div class="container">
+                            <div class="row">
+                                <div class="col-md-8">
+                                <div class="messages">
+                                    {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
