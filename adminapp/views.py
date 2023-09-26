@@ -5,7 +5,7 @@ from userapp.models import Product, Category, User, ProductImage
 from django.views.decorators.cache import cache_control, never_cache
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from ordersapp.models import Order, OrderProduct
+from ordersapp.models import Order, OrderProduct, Payment
 from cartapp.models import Coupons, UserCoupons
 
 
@@ -365,20 +365,25 @@ def update_order_status(request, order_id, new_status):
 
 
 
+
 @login_required
 def admin_order_details(request, order_id):
-
     order_products = OrderProduct.objects.filter(order__user=request.user, order__id=order_id)
+    orders = Order.objects.filter(is_ordered=True, id=order_id)
+    
+    payments = Payment.objects.filter(order__id=order_id)
 
     for order_product in order_products:
         order_product.total = order_product.quantity * order_product.product_price
 
     context = {
         'order_products': order_products,
+        'orders': orders,
+        'payments': payments,
     }
 
-
     return render(request, 'adminapp/admin_order_details.html', context)
+
 
 
 @login_required

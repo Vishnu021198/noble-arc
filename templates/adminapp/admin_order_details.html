@@ -33,6 +33,57 @@
             </table>
         </div>
     </div>
+    <div class="card py-3 mb-4">
+        <h5 class="card-header">Ordered Address</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                      <th>Full Name</th>
+                      <th>Full Address</th>
+                      <th>Mobile</th>
+                    </tr>
+                  </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for order in orders %}
+                    <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{ order.full_name }}</strong></td>
+                        <td>
+                            <p>{{ order.address_line_1 }}</p>
+                            <p>{{ order.address_line_2 }}</p>
+                            <p>{{ order.city }} - {{ order.pincode }}</p>
+                        </td>
+                        <td>{{ order.phone }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card py-3 mb-4">
+        <h5 class="card-header">Payment Details</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Payment Method</th>
+                        <th>Full Amount with GST and Shipping</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for payment in payments %}
+                    <tr>
+                        <td>{{ payment.payment_method }}</td>
+                        <td>₹{{ payment.amount_paid }}</td>
+                        <td>{{ payment.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <!--/ Hoverable Table rows -->
 </div>
 {% endblock %}

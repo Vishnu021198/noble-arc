@@ -319,12 +319,17 @@ def my_orders(request):
 @login_required
 def order_details(request, order_id):
     order_products = OrderProduct.objects.filter(order__user=request.user, order__id=order_id)
+    orders = Order.objects.filter(is_ordered=True, id=order_id)
+    
+    payments = Payment.objects.filter(order__id=order_id)
 
     for order_product in order_products:
         order_product.total = order_product.quantity * order_product.product_price
 
     context = {
         'order_products': order_products,
+        'orders': orders,
+        'payments': payments,
     }
 
     return render(request, 'userapp/order_details.html', context)

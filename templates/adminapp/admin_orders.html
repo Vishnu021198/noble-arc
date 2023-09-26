@@ -15,9 +15,9 @@
                         <th>Full Name</th>
                         <th>Full Address</th>
                         <th>Mobile</th>
-                        <th>Items</th>
                         <th>Total Amount</th>
                         <th>Status</th>
+                        <th>Details</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -32,9 +32,9 @@
 
                         </td>
                         <td>{{ order.phone }}</td>
-                        <td><a href="{% url 'admin_order_details' order.id %}"></i> Items</a></td>
                         <td>{{ order.order_total }}</td>
                         <td>{{ order.status }}</td>
+                        <td><a href="{% url 'admin_order_details' order.id %}"></i> Details</a></td>
                         <td>
                           <div class="dropdown">
                               <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">

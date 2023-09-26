@@ -6,49 +6,93 @@
 <!-- breadcrumb-section -->
 <div class="breadcrumb-section breadcrumb-bg">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-8 offset-lg-2 text-center">
-          <div class="breadcrumb-text">
-            <h1>Your Profile</h1>
-            <p>Order Details</p>
-          </div>
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <h1>Your Profile</h1>
+                    <p>Order Details</p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-  <!-- end breadcrumb section -->
-  
-  <div class="container-fluid">
+</div>
+<!-- end breadcrumb section -->
+
+<div class="container-fluid">
     <div class="row">
-      <!-- Sidebar -->
-      {% include 'userapp/includes/sidebar.html' %}
-      <!-- Main content area -->
-      <main class="main-content">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Product Image</th>
-              <th scope="col">Product Name</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">Price</th>
-              <th scope="col">Total</th>
-            </tr>
-          </thead>
-          <tbody class="table-border-bottom-0">
-            {% for order_product in order_products %}
-            <tr>
-                <td><img src="{{ order_product.product.product_images.url }}" alt="{{ order_product.product.product_name }}" width="100"></td>
-                <td>{{ order_product.product.product_name }}</td>
-                <td>{{ order_product.quantity }}</td>
-                <td>₹{{ order_product.product_price }}</td>
-                <td>₹{{ order_product.total }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-        </table>
-      </main>
+        <!-- Sidebar -->
+        {% include 'userapp/includes/sidebar.html' %}
+        <!-- Main content area -->
+        <main class="main-content col-lg-9">
+            <div class="table-container">
+                <table class="table">
+                  <h5>Product Details</h5>
+                    <thead>
+                        <tr>
+                            <th scope="col">Product Image</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% for order_product in order_products %}
+                        <tr>
+                            <td><img src="{{ order_product.product.product_images.url }}" alt="{{ order_product.product.product_name }}" width="100"></td>
+                            <td>{{ order_product.product.product_name }}</td>
+                            <td>{{ order_product.quantity }}</td>
+                            <td>₹{{ order_product.product_price }}</td>
+                            <td>₹{{ order_product.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <table class="table">
+                  <h5>Address Details</h5>
+                    <thead>
+                        <tr>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Full Address</th>
+                            <th scope="col">Mobile</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      {% for order in orders %}
+                        <tr>
+                            <td><strong>{{ order.full_name }}</strong></td>
+                            <td>
+                              <p>{{ order.address_line_1 }}</p>
+                              <p>{{ order.address_line_2 }}</p>
+                              <p>{{ order.city }} - {{ order.pincode }}</p>
+                            </td>
+                            <td>{{ order.phone }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+                <table class="table">
+                  <h5>Payment Details</h5>
+                    <thead>
+                        <tr>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Full Amount with GST and Shipping</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.payment_method }}</td>
+                            <td>₹{{ payment.amount_paid }}</td>
+                            <td>{{ payment.status }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
     </div>
-  </div>
-  
+</div>
 
 {% endblock %}
