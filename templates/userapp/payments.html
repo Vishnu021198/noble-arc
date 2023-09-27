@@ -112,6 +112,9 @@
 												</div>
 											{% endfor %}
 											<p><input type="text" name="coupon_code" class="form-control" placeholder="Enter your Coupon"></p>
+											<a href="{% url 'my_coupons' %}">
+												Have Coupon?
+											</a>
 											<p><input type="hidden" name="order_id" class="form-control" value="{{order.id}}"></p>
 											<button type="submit" class="btn btn-warning btn-lg" style="background-color: #F28123; color: white; border-radius: 35px;">Apply</button>
 										</div>

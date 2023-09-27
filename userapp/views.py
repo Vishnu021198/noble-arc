@@ -456,7 +456,17 @@ def delete_address(request, address_id):
 def my_coupons(request):
     if request.user.is_authenticated:
         coupons = Coupons.objects.all()
-        context = {'coupons': coupons}
+        user = request.user
+
+        coupon_statuses = []
+
+        for coupon in coupons:
+            is_used = UserCoupons.objects.filter(coupon=coupon, user=user, is_used=True).exists()
+            coupon_statuses.append("Used" if is_used else "Active")
+
+        coupon_data = zip(coupons, coupon_statuses)
+
+        context = {'coupon_data': coupon_data}
         return render(request, 'userapp/my_coupons.html', context)
     else:
         return redirect('user_login')

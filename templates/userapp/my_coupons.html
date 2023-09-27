@@ -36,17 +36,13 @@
           </tr>
         </thead>
         <tbody>
-          {% for coupon in coupons %}
+          {% for coupon, status in coupon_data %}
           <tr>
             <td>{{ coupon.coupon_code }}</td>
             <td>{{ coupon.minimum_amount }}</td>
             <td>{{ coupon.discount }}</td>
             <td>{{ coupon.valid_to|date:"d-m-Y" }}</td>
-            <td>
-              {% with status=coupon_status.coupon %}
-                {{ status }}
-              {% endwith %}
-            </td>
+            <td>{{ status }}</td>
           </tr>
           {% endfor %}
         </tbody>
