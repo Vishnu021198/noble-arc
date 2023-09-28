@@ -29,6 +29,7 @@ urlpatterns = [
     path('view_wishlist/', views.view_wishlist, name='view_wishlist'),
     path('remove_from_wishlist/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
     path('my_wallet/', views.my_wallet, name='my_wallet'),
+    path('wallet_pay/<int:order_id>/', views.wallet_pay, name='wallet_pay'),
     path('order_invoice/<int:order_id>/', views.order_invoice, name='order_invoice'),
     path('user_logout/', views.user_logout, name='user_logout'),
     path('search/', views.search, name='search'),

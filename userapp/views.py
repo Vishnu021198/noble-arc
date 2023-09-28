@@ -527,6 +527,53 @@ def my_wallet(request):
     return render(request, 'userapp/wallet.html', context)
 
 
+@login_required(login_url='login')
+def wallet_pay(request, order_id):
+    user = request.user
+    order = Order.objects.get(id = order_id)
+    try:
+        wallet = Wallet.objects.get(user = user)
+        
+    except:
+        wallet = Wallet.objects.create(user = user, amount=0)
+        wallet.save()
+        
+    if wallet.amount>order.order_total:
+        payment = Payment.objects.create(user=user, payment_method='Wallet', amount_paid = order.order_total, status='Paid')
+        payment.save()
+        order.is_ordered = True
+        
+        order.payment = payment
+        order.save()
+        wallet.amount -= order.order_total
+        wallet.save()
+
+        cart_items = CartItem.objects.filter(user=user)
+    
+        for cart_item in cart_items:
+            order_product = OrderProduct(
+                order=order,
+                payment=payment,
+                user=user,
+                product=cart_item.product,
+                quantity=cart_item.quantity,
+                product_price=cart_item.product.price,
+                ordered=True,
+            )
+            order_product.save()
+        
+        cart_items.delete()
+        
+    else:
+        messages.warning(request, 'Not Enough Balance in Wallet')
+        return redirect('payment', order_id)
+    context = {
+        'order': order,
+        'order_number': order.order_number,
+        }
+    return render(request, 'userapp/order_confirmed.html', context)
+
+
 
 
 
