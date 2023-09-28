@@ -25,6 +25,7 @@ def add_cart(request, product_id):
             if cart_item.quantity < product.quantity:
                 cart_item.quantity += 1
                 cart_item.save()
+                
             else:
                 messages.warning(request, 'Product quantity in cart exceeds available quantity.')
         else:
@@ -33,7 +34,11 @@ def add_cart(request, product_id):
                 quantity=1,
                 user=current_user,
             )
-        return redirect('cart')
+            
+            messages.success(request, 'Product Added to Cart')
+            
+        return redirect('product_list')
+    
     else:
         try:
             cart = Cart.objects.get(cart_id=_cart_id(request))
@@ -56,8 +61,8 @@ def add_cart(request, product_id):
                 quantity=1,
                 cart=cart,
             )
-
-        return redirect('cart')
+        messages.success(request, 'Product Added to Cart')
+        return redirect('product_list')
 
 
 
