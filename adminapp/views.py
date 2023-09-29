@@ -6,7 +6,10 @@ from django.views.decorators.cache import cache_control, never_cache
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from ordersapp.models import Order, OrderProduct, Payment
-from cartapp.models import Coupons, UserCoupons
+from cartapp.models import Coupons
+from datetime import timedelta, datetime
+from django.db.models import Count, Sum
+from decimal import Decimal
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -35,18 +38,59 @@ def index(request):
          
 
 
-
-@never_cache
 @login_required
 def dashboard(request):
     if request.user.is_superadmin:
         if not request.user.is_superadmin:
             return redirect('index')
-        
-        context = {'admin_name': request.user.name}
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=7)
+
+        recent_orders = Order.objects.filter(is_ordered=True).order_by('-created_at')[:10]
+
+        last_year = end_date - timedelta(days=365)
+        yearly_order_counts = (
+            Order.objects
+            .filter(created_at__range=(last_year, end_date), is_ordered=True)
+            .values('created_at__year')
+            .annotate(order_count=Count('id'))
+            .order_by('created_at__year')
+        )
+
+        month = end_date - timedelta(days=30)
+        monthly_earnings = (
+            Order.objects
+            .filter(created_at__range=(month, end_date), is_ordered=True)
+            .aggregate(total_order_total=Sum('order_total'))
+        )['total_order_total']
+
+        monthly_earnings = Decimal(monthly_earnings).quantize(Decimal('0.00'))
+
+        daily_order_counts = (
+            Order.objects
+            .filter(created_at__range=(start_date, end_date), is_ordered=True)
+            .values('created_at__date')
+            .annotate(order_count=Count('id'))
+            .order_by('created_at__date')
+        )
+
+        dates = [entry['created_at__date'].strftime('%Y-%m-%d') for entry in daily_order_counts]
+        counts = [entry['order_count'] for entry in daily_order_counts]
+
+        context = {
+            'admin_name': request.user.name,
+            'dates': dates,
+            'counts': counts,
+            'orders': recent_orders,
+            'yearly_order_counts': yearly_order_counts,
+            'monthly_earnings': monthly_earnings,
+            'order_count': len(recent_orders),
+        }
+
         return render(request, 'adminapp/dashboard.html', context)
     else:
         return HttpResponseForbidden("You don't have permission to access this page.")
+
 
 
 
