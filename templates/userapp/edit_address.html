@@ -61,11 +61,10 @@
                 <p><input type="text" placeholder="Last Name" name="last_name" value="{{ address.last_name }}"></p>
                 <p><input type="email" placeholder="Email" name="email" value="{{ address.email }}" required></p>
                 <p><input type="tel" placeholder="Phone" name="phone" value="{{ address.phone }}" required></p>
-                <p><input type="text" placeholder="Address Line 1" name="address_line_1" value="{{ address.address_line_1 }}" required></p>
+                <p><textarea type="text" cols="80"  placeholder="Address Line 1" name="address_line_1" value="{{ address.address_line_1 }}" required></textarea></p>
                 <p><input type="text" placeholder="Address Line 2" name="address_line_2" value="{{ address.address_line_2 }}"></p>
                 <p><input type="text" placeholder="City" name="city" value="{{ address.city }}" required></p>
                 <p><input type="text" placeholder="Pincode" name="pincode" value="{{ address.pincode }}" required></p>
-                <p><textarea name="order_note" cols="80" rows="3" placeholder="Order Note">{{ address.order_note }}</textarea></p>
                 <button type="submit" class="btn btn-warning btn-lg" style="background-color: #F28123; color: white; border-radius: 35px;">Save Changes</button>
               </div>
             </form>

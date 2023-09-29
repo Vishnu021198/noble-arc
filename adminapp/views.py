@@ -510,9 +510,3 @@ def delete_coupons(request, coupon_id):
         messages.success(request, "Coupon deleted successfully.")
     
     return redirect('admin_coupons')
-
-
-
-@login_required
-def admin_banners(request):
-    return render(request, 'adminapp/admin_banners.html')

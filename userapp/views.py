@@ -22,7 +22,6 @@ from ordersapp.models import Order, OrderProduct, Payment, Wallet, Address
 
 
 def index(request):
-
     response = HttpResponse()
     response['Cache-Control'] = 'no-store'
 
@@ -31,7 +30,6 @@ def index(request):
     context = {
         'categories': categories,
     }
-
     return render(request, 'userapp/index.html', context)
 
 
@@ -242,7 +240,6 @@ def signup_otp(request):
 
 @login_required
 def user_profile(request):
-
     return render(request, 'userapp/user_profile.html')
 
 
@@ -527,7 +524,7 @@ def my_wallet(request):
     return render(request, 'userapp/wallet.html', context)
 
 
-@login_required(login_url='login')
+@login_required(login_url='user_login')
 def wallet_pay(request, order_id):
     user = request.user
     order = Order.objects.get(id = order_id)
