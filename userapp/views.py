@@ -2,8 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Product,Category,User
 from django.contrib import messages, auth
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMessage
 from django.contrib.auth import authenticate,login,logout
-from . import verify
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -97,6 +102,81 @@ def contact(request):
 
 
 
+
+
+
+
+def signup(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        mobile = request.POST.get("mobile")
+        password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.warning(request, "Invalid email address")
+            return redirect('/signup')
+
+        if password != confirm_password:
+            messages.warning(request, "Passwords do not match")
+            return redirect('/signup')
+
+        if User.objects.filter(name=name).exists():
+            messages.warning(request, "Username is already taken")
+            return redirect('/signup')
+
+        if User.objects.filter(email=email).exists():
+            messages.warning(request, "Email is already taken")
+            return redirect('/signup')
+        
+        if User.objects.filter(mobile=mobile).exists():
+            messages.warning(request, "Mobile Number is already taken")
+            return redirect('/signup')
+        
+        user = User(name=name, email=email, mobile=mobile)
+        user.set_password(password)
+        user.save()
+
+        current_site = get_current_site(request)
+        mail_subject = "Please acivate your Account"
+        message = render_to_string('userapp/signup_verification.html',{
+            'user': user,
+            'domain': current_site,
+            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': default_token_generator.make_token(user),
+        })
+        to_email = email
+        send_email  = EmailMessage(mail_subject, message, to=[to_email])
+        send_email.send()
+        messages.success(request, 'Please click on the link send to your email to Activate your Account')
+
+    return render(request, 'userapp/signup.html')
+
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.is_staff = True
+        user.save()
+        messages.success(request, 'Congrats, Your Account is Activated. Please Login!!')
+        return redirect('user_login')
+    else:
+        messages.warning(request, 'Invalid Activation Link.')
+        return redirect('signup')
+    
+
+
+
 def user_login(request):
     if request.user.is_authenticated:
         return redirect('/')
@@ -139,103 +219,69 @@ def user_login(request):
 def forgot_password(request):
 
     if request.method == "POST":
+        email = request.POST['email']
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
 
-        return redirect("/password_otp")
-    
-    return render(request, 'userapp/forgot_password.html')
+            current_site = get_current_site(request)
+            mail_subject = "Reset Your Password"
+            message = render_to_string('userapp/password_verification.html',{
+                'user': user,
+                'domain': current_site,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            })
+            to_email = email
+            send_email  = EmailMessage(mail_subject, message, to=[to_email])
+            send_email.send()
+
+            messages.success(request,"Password reset email has been sent to your email address ")
+            return redirect('user_login')
+
+        else:
+            messages.warning(request, 'Account does not exist!')
+    else:
+        return render(request, 'userapp/forgot_password.html')
 
 
 
-def password_otp(request):
 
-    if request.method == "POST":
+def password_validation(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
 
-        return redirect("/reset_password")
-    
-    return render(request, 'userapp/password_otp.html')
-
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        messages.success(request, 'Please Reset your Password!!')
+        return redirect('reset_password')
+    else:
+        messages.warning(request, 'Link has been expired')
+        return redirect('user_login')
 
 
 def reset_password(request):
 
     if request.method == "POST":
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
 
-        return redirect("/login")
-    
-    return render(request, 'userapp/reset_password.html')
-
-
-
-
-def signup(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        email = request.POST.get("email")
-        mobile = request.POST.get("mobile")
-        password = request.POST.get("new_password")
-        confirm_password = request.POST.get("confirm_password")
-
-        try:
-            validate_email(email)
-        except ValidationError:
-            messages.warning(request, "Invalid email address")
-            return redirect('/signup')
-
-        if password != confirm_password:
-            messages.warning(request, "Passwords do not match")
-            return redirect('/signup')
-
-        if User.objects.filter(name=name).exists():
-            messages.warning(request, "Username is already taken")
-            return redirect('/signup')
-
-        if User.objects.filter(email=email).exists():
-            messages.warning(request, "Email is already t   aken")
-            return redirect('/signup')
-
-        otp = verify.generate_otp()
-        print("Generated OTP:", otp)
-        verify.send_otp(mobile, otp)
-
-        request.session["signup_user_data"] = {
-            "name": name,
-            "email": email,
-            "mobile": mobile,
-            "password": password,
-            "otp": otp,
-        }
-
-        return redirect("signup_otp")
-
-    return render(request, 'userapp/signup.html')
-
-
-
-
-
-
-
-def signup_otp(request):
-    if request.method == "POST":
-        entered_otp = request.POST.get("otp")
-        stored_data = request.session.get("signup_user_data")
-        
-
-        if stored_data and entered_otp == stored_data["otp"]:
-            
-            user = User(name=stored_data["name"], email=stored_data["email"], mobile=stored_data["mobile"])
-            user.set_password(stored_data["password"])
-            user.is_active = True
-            user.is_staff = True
+        if password == confirm_password:
+            uid = request.session.get('uid')
+            user = User.objects.get(pk=uid)
+            user.set_password(password)
             user.save()
-            
-            del request.session["signup_user_data"]
-            
-            return redirect("user_login")
-        else:
-            pass
+            messages.success(request, 'Password reset Successfull')
+            return redirect('user_login')
 
-    return render(request, "userapp/signup_otp.html")
+        else:
+            messages.warning(request, 'Passwords do not match')
+            return redirect("reset_password")
+    else:
+        return render(request, 'userapp/reset_password.html')
+
 
 
 @login_required

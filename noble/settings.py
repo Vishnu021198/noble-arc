@@ -143,9 +143,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Email Verification
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'nair654065@gmail.com'
+EMAIL_HOST_PASSWORD = 'xzph ebys qpka fhom'
+EMAIL_USE_TLS = True
 
-
-
+# Razor Pay
 KEY = 'rzp_test_bENwqWBNfFVEOx'
-
 SECRET = '5TvrfLQbZQnAozc4MiJ52vmJ'

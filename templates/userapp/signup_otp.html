@@ -28,6 +28,26 @@
                         <p>Enter the OTP sent to your mobile number.</p>
                     </div>
                     <div class="contact-form">
+
+                        {% if messages %}
+						<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+							<div class="messages">
+								{% for message in messages %}
+								<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+								{{ message }}
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								</div>
+								{% endfor %}
+							</div>
+							</div>
+						</div>
+						</div>
+						{% endif %}
+
                         <form method="POST" id="otp-form" action="{% url 'signup_otp' %}">
                             {% csrf_token %}
                             <p>

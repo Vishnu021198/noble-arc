@@ -282,69 +282,6 @@ def apply_coupon(request):
     return redirect('payments', order_id)
 
 
-
-
-
-# def razor(request):
-#     current_user = request.user
-#     cart_items = CartItem.objects.filter(user=current_user)
-
-
-#     total = 0
-#     quantity = 0
-
-#     for cart_item in cart_items:
-#         total += (cart_item.product.price * cart_item.quantity)
-#         quantity += cart_item.quantity
-
-#     tax = (18 * total) / 100
-#     shipping = (100 * quantity)
-#     grand_total = total + tax + shipping
-
-#     if request.method == "POST":
-#         form = OrderForm(request.POST)
-#         if form.is_valid():
-#             data = Order()
-#             data.user = current_user
-#             data.first_name = form.cleaned_data['first_name']
-#             data.last_name = form.cleaned_data['last_name']
-#             data.email = form.cleaned_data['email']
-#             data.phone = form.cleaned_data['phone']
-#             data.address_line_1 = form.cleaned_data['address_line_1']
-#             data.address_line_2 = form.cleaned_data['address_line_2']
-#             data.city = form.cleaned_data['city']
-#             data.pincode = form.cleaned_data['pincode']
-#             data.order_total = grand_total
-#             data.shipping = shipping
-#             data.tax = tax
-#             data.ip = request.META.get('REMOTE_ADDR')
-#             data.save()
-
-#             yr = int(datetime.date.today().strftime('%Y'))
-#             dt = int(datetime.date.today().strftime('%d'))
-#             mt = int(datetime.date.today().strftime('%m'))
-#             d = datetime.date(yr, mt, dt)
-#             current_date = d.strftime("%Y%m%d")
-#             order_number = current_date + str(data.id)
-#             data.order_number = order_number
-#             data.save()
-
-#             payment_amount_paise = int(grand_total * 100)
-
-#             client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
-#             payment = client.order.create({
-#                 'amount': payment_amount_paise,
-#                 'currency': 'INR',
-#                 'payment_capture': 1,
-#                 'external_order_id': order_number,
-#             })
-
-#             return redirect(payment['short_url'])
-
-#     return redirect('checkout')
-
-
-
 def order_confirmed(request, order_number):
     user = request.user
     order = Order.objects.get(order_number=order_number)

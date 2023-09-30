@@ -37,7 +37,7 @@ def add_cart(request, product_id):
             
             messages.success(request, 'Product Added to Cart')
             
-        return redirect('product_list')
+        return redirect('cart')
     
     else:
         try:
