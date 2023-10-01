@@ -22,19 +22,36 @@
 	<div class="product-section mt-150 mb-150">
 		
 		<div class="container">
-                <div class="row">
-					<div class="col-md-12">
-						<div class="product-filters">
-							<ul>
-								<li data-filter="*"><a href="?category=">All</a></li>
-								{% for category in categories %}
-                    				<li data-filter=".{{ category.category_name }}"><a href="?category={{ category.id }}">{{ category.category_name }}</a></li>
-                				{% endfor %}
-							</ul>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="product-filters">
+						<ul>
+							<li data-filter="*"><a href="?category=">All</a></li>
+							{% for category in categories %}
+								<li data-filter=".{{ category.category_name }}"><a href="?category={{ category.id }}">{{ category.category_name }}</a></li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+			{% if messages %}
+				<div class="container">
+					<div class="row">
+						<div class="col-md-3">
+							<div class="messages">
+								{% for message in messages %}
+								<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+								{{ message }}
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								</div>
+								{% endfor %}
+							</div>
 						</div>
 					</div>
 				</div>
-
+			{% endif %}
 			<div class="row product-lists">
 				<div class="col-md-3">
 					<div class="price-filter">

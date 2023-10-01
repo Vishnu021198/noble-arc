@@ -25,6 +25,7 @@ def add_cart(request, product_id):
             if cart_item.quantity < product.quantity:
                 cart_item.quantity += 1
                 cart_item.save()
+                return redirect('cart')
                 
             else:
                 messages.warning(request, 'Product quantity in cart exceeds available quantity.')
@@ -35,9 +36,9 @@ def add_cart(request, product_id):
                 user=current_user,
             )
             
-            messages.success(request, 'Product Added to Cart')
+        messages.success(request, 'Product Added to Cart')
             
-        return redirect('cart')
+        return redirect('product_list')
     
     else:
         try:
@@ -53,6 +54,7 @@ def add_cart(request, product_id):
             if cart_item.quantity < product.quantity:
                 cart_item.quantity += 1
                 cart_item.save()
+                return redirect('cart')
             else:
                 messages.warning(request, 'Product quantity in cart exceeds available quantity.')
         else:
@@ -90,15 +92,19 @@ def remove_cart(request, product_id):
 
 
 def remove_cart_item(request, product_id):
-    
     product = Product.objects.filter(id=product_id).first()
     if request.user.is_authenticated:
-        cart_item = CartItem.objects.get(product=product, user=request.user)
+        cart_items = CartItem.objects.filter(product=product, user=request.user)
     else:
         cart = Cart.objects.get(cart_id=_cart_id(request))
-        cart_item = CartItem.objects.get(product=product, cart=cart)
-    cart_item.delete()
+        cart_items = CartItem.objects.filter(product=product, cart=cart)
+    
+    if cart_items.exists():
+        cart_item_to_delete = cart_items.first()
+        cart_item_to_delete.delete()
+    
     return redirect('cart')
+
 
 
 
