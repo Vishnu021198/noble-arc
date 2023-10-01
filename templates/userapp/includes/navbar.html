@@ -51,15 +51,11 @@
 												<i class="fas fa-user"></i>
 											</a>
 										{% endif %}
-										{% if user.is_authenticated %}
-											<a class="shopping-cart" href="/cart">
-												<i class="fas fa-shopping-cart"></i>
-											</a>
-										{% else %}
-											<a class="shopping-cart" href="/cart">
-												<i class="fas fa-shopping-cart"></i>
-											</a>
-										{% endif %}
+										<a class="shopping-cart" href="/cart">
+											<i class="fas fa-shopping-cart">
+												<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{cart_count}}</span>
+											</i>
+										</a>
 										<a class="mobile-hide search-bar-icon" href="#">
 											<i class="fas fa-search"></i>
 										</a>
