@@ -45,7 +45,7 @@
               <p>{{ order.address_line_1 }},{{ order.city}}</p>
             </td>
             <td>{{ order.phone }}</td>
-            <td>${{ order.order_total }}</td>
+            <td>₹{{ order.order_total }}</td>
             <td>{{ order.created_at|date:"F j, Y" }}</td>
             <td>{{ order.status }}</td>
             <td>

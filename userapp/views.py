@@ -609,7 +609,7 @@ def wallet_pay(request, order_id):
         
     else:
         messages.warning(request, 'Not Enough Balance in Wallet')
-        return redirect('payment', order_id)
+        return redirect('payments', order_id)
     context = {
         'order': order,
         'order_number': order.order_number,

@@ -62,7 +62,7 @@ def dashboard(request):
             Order.objects
             .filter(created_at__range=(month, end_date), is_ordered=True)
             .aggregate(total_order_total=Sum('order_total'))
-        )['total_order_total']
+        )['total_order_total'] or Decimal('0.00')
 
         monthly_earnings = Decimal(monthly_earnings).quantize(Decimal('0.00'))
 
