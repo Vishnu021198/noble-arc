@@ -41,6 +41,10 @@ def cash_on_delivery(request, order_number):
     
     
     for cart_item in cart_items:
+        product=cart_item.product
+        stock=product.quantity-cart_item.quantity
+        product.quantity=stock
+        product.save()
         order_product = OrderProduct(
             order=order,
             payment=payment,
@@ -317,8 +321,14 @@ def confirm_razorpay_payment(request, order_number):
     order.payment = payment
     order.save()
 
+
+
     cart_items = CartItem.objects.filter(user=current_user)
     for cart_item in cart_items:
+        product=cart_item.product
+        stock=product.quantity-cart_item.quantity
+        product.quantity=stock
+        product.save()
         order_product = OrderProduct(
             order=order,
             payment=payment,

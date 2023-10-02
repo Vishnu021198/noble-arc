@@ -594,6 +594,10 @@ def wallet_pay(request, order_id):
         cart_items = CartItem.objects.filter(user=user)
     
         for cart_item in cart_items:
+            product=cart_item.product
+            stock=product.quantity-cart_item.quantity
+            product.quantity=stock
+            product.save()
             order_product = OrderProduct(
                 order=order,
                 payment=payment,
