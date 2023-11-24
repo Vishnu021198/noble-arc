@@ -13,7 +13,6 @@ Noble Arc is a dynamic ecommerce website developed to provide a seamless online 
 ## Integrations
 
 - **Razorpay:** Secure and smooth payment transactions for a reliable checkout process.
-- **Twilio:** Seamlessly integrate SMS notifications for order updates and alerts.
 
 
 <h3 align="left">Languages and Tools:</h3>
