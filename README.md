@@ -27,8 +27,8 @@ Noble Arc is a dynamic ecommerce website developed to provide a seamless online 
 
 2. Set up your virtual environment.
    ```
-   virtualenv venv
-   source venv/bin/activate
+   virtualenv env
+   source env/bin/activate
    ```
 
 3. Install the dependencies.
